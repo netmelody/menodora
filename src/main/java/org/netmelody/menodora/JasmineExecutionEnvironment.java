@@ -33,7 +33,7 @@ public final class JasmineExecutionEnvironment {
         loadJavaScript("/jasmine-1.0.2/jasmine-html.js");
     }
     
-    public void executeJUnitTests(Collection<File> specs, RunNotifier notifier) {
+    public void executeJUnitTests(Collection<File> scripts, RunNotifier notifier) {
         loadJavaScript("/Player.js");
         loadJavaScript("/Song.js");
 

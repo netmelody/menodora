@@ -1,6 +1,7 @@
 package org.netmelody.menodora;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,40 +10,19 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.runner.Description;
+import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
 
-public class JasmineSuite extends ParentRunner<JasmineSpecRunner> {
+public class JasmineSuite extends Runner {
     
-    private final List<JasmineSpecRunner> runners = new ArrayList<JasmineSpecRunner>();
+    private final Class<?> klass;
+    private final List<JasmineSpecFileWrapper> specs = new ArrayList<JasmineSpecFileWrapper>();
+    private final List<File> scriptFiles = new ArrayList<File>();
 
     public JasmineSuite(Class<?> klass, RunnerBuilder builder) throws InitializationError {
-        this(klass);
-    }
-
-    protected JasmineSuite(Class<?> klass) throws InitializationError {
-        super(klass);
-        discoverJasmineSpecs(klass);
-    }
-    
-    @Override
-    protected List<JasmineSpecRunner> getChildren() {
-        return runners;
-    }
-    
-    @Override
-    protected Description describeChild(JasmineSpecRunner child) {
-        return child.getDescription();
-    }
-
-    @Override
-    protected void runChild(JasmineSpecRunner runner, final RunNotifier notifier) {
-        runner.run(notifier);
-    }
-    
-    private void discoverJasmineSpecs(Class<?> klass) {
+        this.klass = klass;
         try {
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
             final String classResource = klass.getName().replaceAll("\\.", "/")+".class";
@@ -51,13 +31,40 @@ public class JasmineSuite extends ParentRunner<JasmineSpecRunner> {
 
             Collection<File> specFiles = FileUtils.listFiles(root, new String[] {"js"}, true);
             for (File file : specFiles) {
-                System.out.println(file);
+                if (isSpecFile(file)) {
+                    this.specs.add(new JasmineSpecFileWrapper(file));
+                }
+                this.scriptFiles.add(file);
             }
             
-            this.runners.add(new JasmineSpecRunner(klass, specFiles));
         }
         catch (Exception e) {
             throw new IllegalArgumentException(e);
+        }
+    }
+
+    @Override
+    public Description getDescription() {
+        final Description description = Description.createSuiteDescription(klass);
+        
+        for (JasmineSpecFileWrapper spec : this.specs) {
+            description.addChild(spec.getDescription());
+        }
+        
+        return description;
+    }
+
+    @Override
+    public void run(RunNotifier notifier) {
+        final JasmineExecutionEnvironment environment = new JasmineExecutionEnvironment();
+        environment.executeJUnitTests(scriptFiles, notifier);
+    }
+    
+    private boolean isSpecFile(File specFile) {
+        try {
+            return FileUtils.readFileToString(specFile).startsWith("describe");
+        } catch (IOException e) {
+            return false;
         }
     }
 }
