@@ -97,7 +97,7 @@ public class JasmineSpecFileWrapper {
             }
             
             parse(node.getFirstChild(), functions);
-            description = parentDesc;
+            //description = parentDesc;
             
             parse(node.getNext(), functions);
         }
