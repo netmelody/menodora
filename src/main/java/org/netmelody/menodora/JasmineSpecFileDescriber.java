@@ -82,7 +82,8 @@ public final class JasmineSpecFileDescriber {
                     description = suiteDesc;
                 }
                 if ("it".equals(node.getString())) {
-                    description.addChild(Description.createTestDescription(Object.class, node.getNext().getString()));
+                    description.addChild(Description.createTestDescription(new Object(){}.getClass(),
+                                                                           node.getNext().getString()));
                 }
                 System.out.println(node.getString());
             }
