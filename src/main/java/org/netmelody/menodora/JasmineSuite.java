@@ -18,7 +18,7 @@ import org.junit.runners.model.RunnerBuilder;
 public class JasmineSuite extends Runner {
     
     private final Class<?> klass;
-    private final List<JasmineSpecFileWrapper> specs = new ArrayList<JasmineSpecFileWrapper>();
+    private final List<JasmineSpecFileDescriber> specs = new ArrayList<JasmineSpecFileDescriber>();
     private final List<File> scriptFiles = new ArrayList<File>();
 
     public JasmineSuite(Class<?> klass, RunnerBuilder builder) throws InitializationError {
@@ -32,7 +32,7 @@ public class JasmineSuite extends Runner {
             Collection<File> specFiles = FileUtils.listFiles(root, new String[] {"js"}, true);
             for (File file : specFiles) {
                 if (isSpecFile(file)) {
-                    this.specs.add(new JasmineSpecFileWrapper(file));
+                    this.specs.add(new JasmineSpecFileDescriber(file));
                 }
                 this.scriptFiles.add(file);
             }
@@ -47,7 +47,7 @@ public class JasmineSuite extends Runner {
     public Description getDescription() {
         final Description description = Description.createSuiteDescription(klass);
         
-        for (JasmineSpecFileWrapper spec : this.specs) {
+        for (JasmineSpecFileDescriber spec : this.specs) {
             description.addChild(spec.getDescription());
         }
         

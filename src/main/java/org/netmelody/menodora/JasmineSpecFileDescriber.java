@@ -14,11 +14,11 @@ import org.mozilla.javascript.Parser;
 import org.mozilla.javascript.ScriptOrFnNode;
 import org.mozilla.javascript.Token;
 
-public class JasmineSpecFileWrapper {
+public class JasmineSpecFileDescriber {
 
     private final File specFile;
 
-    public JasmineSpecFileWrapper(File specFile) {
+    public JasmineSpecFileDescriber(File specFile) {
         this.specFile = specFile;
     }
 
