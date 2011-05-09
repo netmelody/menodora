@@ -26,7 +26,7 @@ import org.junit.runners.model.RunnerBuilder;
 
 public final class JasmineSuite extends Runner {
     
-    private final Class<?> klass;
+    private final Class<?> suiteClass;
     private final List<JasmineSpecFileDescriber> specs = new ArrayList<JasmineSpecFileDescriber>();
     private final List<File> scriptFiles = new ArrayList<File>();
 
@@ -51,24 +51,24 @@ public final class JasmineSuite extends Runner {
         public String[] value();
     }
     
-    private static String[] getJasmineSpecFileMatchers(Class<?> klass) throws InitializationError {
-        JasmineSpecs annotation = klass.getAnnotation(JasmineSpecs.class);
+    private static String[] getJasmineSpecFileMatchers(Class<?> suiteClass) throws InitializationError {
+        JasmineSpecs annotation = suiteClass.getAnnotation(JasmineSpecs.class);
         if (annotation == null) {
             return new String[] {"*Spec.js"};
         }
         return annotation.value();
     }
     
-    private static String[] getJasmineHelperFileMatchers(Class<?> klass) throws InitializationError {
-        JasmineHelpers annotation = klass.getAnnotation(JasmineHelpers.class);
+    private static String[] getJasmineHelperFileMatchers(Class<?> suiteClass) throws InitializationError {
+        JasmineHelpers annotation = suiteClass.getAnnotation(JasmineHelpers.class);
         if (annotation == null) {
             return new String[] {"*.js"};
         }
         return annotation.value();
     }
     
-    private static String[] getSourceFileMatchers(Class<?> klass) throws InitializationError {
-        Source annotation = klass.getAnnotation(Source.class);
+    private static String[] getSourceFileMatchers(Class<?> suiteClass) throws InitializationError {
+        Source annotation = suiteClass.getAnnotation(Source.class);
         if (annotation == null) {
             return new String[] {"*.js"};
         }
@@ -92,24 +92,24 @@ public final class JasmineSuite extends Runner {
         return files;
     }
     
-    public JasmineSuite(Class<?> klass, RunnerBuilder builder) throws InitializationError {
-        this.klass = klass;
+    public JasmineSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError {
+        this.suiteClass = suiteClass;
         try {
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            final String classResource = klass.getName().replaceAll("\\.", "/")+".class";
+            final String classResource = suiteClass.getName().replaceAll("\\.", "/")+".class";
             Enumeration<URL> urls = cl.getResources(classResource);
             final File root = new File(urls.nextElement().toString().replace("file:", "").replace(classResource, ""));
 
-            final Collection<File> specFiles = getFilesFrom(getJasmineSpecFileMatchers(klass), root);
+            final Collection<File> specFiles = getFilesFrom(getJasmineSpecFileMatchers(suiteClass), root);
             
             for (File spec : specFiles) {
-                this.specs.add(new JasmineSpecFileDescriber(spec));
+                this.specs.add(new JasmineSpecFileDescriber(spec, suiteClass));
             }
             
             final LinkedHashSet<File> files = new LinkedHashSet<File>();
             files.addAll(specFiles);
-            files.addAll(getFilesFrom(getJasmineHelperFileMatchers(klass), root));
-            files.addAll(getFilesFrom(getSourceFileMatchers(klass), root));
+            files.addAll(getFilesFrom(getJasmineHelperFileMatchers(suiteClass), root));
+            files.addAll(getFilesFrom(getSourceFileMatchers(suiteClass), root));
             
             this.scriptFiles.addAll(files);
             Collections.reverse(this.scriptFiles);
@@ -121,7 +121,7 @@ public final class JasmineSuite extends Runner {
 
     @Override
     public Description getDescription() {
-        final Description description = Description.createSuiteDescription(klass);
+        final Description description = Description.createSuiteDescription(suiteClass);
         
         for (JasmineSpecFileDescriber spec : this.specs) {
             description.addChild(spec.getDescription());
@@ -133,6 +133,6 @@ public final class JasmineSuite extends Runner {
     @Override
     public void run(RunNotifier notifier) {
         final JasmineExecutionEnvironment environment = new JasmineExecutionEnvironment();
-        environment.executeJUnitTests(scriptFiles, notifier);
+        environment.executeJUnitTests(scriptFiles, new JasmineJunitReporter(suiteClass, notifier));
     }
 }

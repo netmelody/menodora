@@ -7,7 +7,6 @@ import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.junit.runner.notification.RunNotifier;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.tools.shell.Global;
@@ -33,13 +32,13 @@ public final class JasmineExecutionEnvironment {
         loadJavaScript("/jasmine-1.0.2/jasmine-html.js");
     }
     
-    public void executeJUnitTests(Collection<File> scripts, RunNotifier notifier) {
+    public void executeJUnitTests(Collection<File> scripts, JasmineReporter reporter) {
         for (File file : scripts) {
             System.out.println(file.getPath());
             loadJavaScript(file);
         }
         
-        global.put("jUnitReporter", global, new JasmineJunitReporter(notifier));
+        global.put("jUnitReporter", global, reporter);
         eval("jasmine.getEnv().addReporter(jUnitReporter);");
         
         try {

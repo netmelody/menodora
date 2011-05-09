@@ -18,10 +18,10 @@ public final class JasmineSpecFileDescriber {
 
     private final Description description;
 
-    public JasmineSpecFileDescriber(File specFile) {
+    public JasmineSpecFileDescriber(File specFile, Class<?> suiteClass) {
         description = Description.createSuiteDescription(specFile.getPath());
         ScriptOrFnNode tree = parseJavascript(specFile);
-        new Describer(description).appendDescriptionOf(tree);
+        new Describer(description, suiteClass).appendDescriptionOf(tree);
     }
 
     public Description getDescription() {
@@ -50,14 +50,16 @@ public final class JasmineSpecFileDescriber {
     
     private static final class Describer {
         
+        private final Class<?> suiteClass;
         private Description description;
-
+        
         public void appendDescriptionOf(ScriptOrFnNode tree) {
             parseFunction(tree);
         }
 
-        public Describer(Description description) {
+        public Describer(Description description, Class<?> suiteClass) {
             this.description = description;
+            this.suiteClass = suiteClass;
         }
 
         public void parseFunction(ScriptOrFnNode node) {
@@ -82,7 +84,7 @@ public final class JasmineSpecFileDescriber {
                     description = suiteDesc;
                 }
                 if ("it".equals(node.getString())) {
-                    description.addChild(Description.createTestDescription(Object.class,
+                    description.addChild(Description.createTestDescription(this.suiteClass,
                                                                            node.getNext().getString()));
                 }
                 System.out.println(node.getString());

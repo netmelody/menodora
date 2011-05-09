@@ -5,22 +5,27 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.mozilla.javascript.NativeObject;
 
-public final class JasmineJunitReporter {
+public final class JasmineJunitReporter implements JasmineReporter {
 
     private final RunNotifier notifier;
+    private final Class<?> suiteClass;
 
-    public JasmineJunitReporter(RunNotifier notifier) {
+    public JasmineJunitReporter(Class<?> suiteClass, RunNotifier notifier) {
+        this.suiteClass = suiteClass;
         this.notifier = notifier;
     }
 
+    @Override
     public void reportRunnerResults(NativeObject runner) {
         System.out.println("Jasmine Runner Finished.");
     }
     
+    @Override
     public void reportRunnerStarting(NativeObject runner) {
         System.out.println("Jasmine Runner Started.");
     }
     
+    @Override
     public void reportSpecResults(NativeObject spec) {
         String specDesc = (String)NativeObject.getProperty(spec, "description");
 //        NativeObject suite = (NativeObject)NativeObject.getProperty(spec, "suite");
@@ -33,13 +38,14 @@ public final class JasmineJunitReporter {
         System.out.println(fullName + (passed ? " Passed." : " Failed."));
         
         if (passed) {
-            notifier.fireTestFinished(Description.createTestDescription(Object.class, specDesc));
+            notifier.fireTestFinished(Description.createTestDescription(suiteClass, specDesc));
             return;
         }
         
-        notifier.fireTestFailure(new Failure(Description.createTestDescription(Object.class, specDesc), new Exception()));
+        notifier.fireTestFailure(new Failure(Description.createTestDescription(suiteClass, specDesc), new Exception()));
     }
     
+    @Override
     public void reportSpecStarting(NativeObject spec) {
         String specDesc = (String)NativeObject.getProperty(spec, "description");
 //        NativeObject suite = (NativeObject)NativeObject.getProperty(spec, "suite");
@@ -47,9 +53,10 @@ public final class JasmineJunitReporter {
         String fullName = (String)NativeObject.callMethod(spec, "getFullName", new Object[0]);
         System.out.println(fullName + "...");
         
-        notifier.fireTestStarted(Description.createTestDescription(Object.class, specDesc));
+        notifier.fireTestStarted(Description.createTestDescription(suiteClass, specDesc));
     }
     
+    @Override
     public void reportSuiteResults(NativeObject suite) {
         Object suiteDesc = NativeObject.getProperty(suite, "description");
         NativeObject results = (NativeObject)NativeObject.callMethod(suite, "results", new Object[0]);
