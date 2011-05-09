@@ -36,7 +36,7 @@ public final class JasmineExecutionEnvironment {
     public void executeJUnitTests(Collection<File> scripts, RunNotifier notifier) {
         for (File file : scripts) {
             System.out.println(file.getPath());
-            loadJavaScript(file.getPath());
+            loadJavaScript(file);
         }
         
         global.put("jUnitReporter", global, new JasmineJunitReporter(notifier));
@@ -53,6 +53,16 @@ public final class JasmineExecutionEnvironment {
         }
     }
 
+    private Object loadJavaScript(File script) {
+        try {
+            String scriptSource = FileUtils.readFileToString(script);
+            return context.compileString(scriptSource, script.getPath(), 1, null).exec(context, global);
+        }
+        catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+    
     private Object loadJavaScript(String resource) {
         try {
             URL url = getClass().getResource(resource);

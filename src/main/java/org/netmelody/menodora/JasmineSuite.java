@@ -10,8 +10,11 @@ import java.lang.annotation.Target;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.NameFileFilter;
@@ -36,12 +39,59 @@ public final class JasmineSuite extends Runner {
         public String[] value();
     }
     
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+    @Inherited
+    public @interface Source {
+        public String[] value();
+    }
+    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+    @Inherited
+    public @interface JasmineHelpers {
+        public String[] value();
+    }
+    
     private static String[] getJasmineSpecFileMatchers(Class<?> klass) throws InitializationError {
         JasmineSpecs annotation = klass.getAnnotation(JasmineSpecs.class);
         if (annotation == null) {
             return new String[] {"*Spec.js"};
         }
         return annotation.value();
+    }
+    
+    private static String[] getJasmineHelperFileMatchers(Class<?> klass) throws InitializationError {
+        JasmineHelpers annotation = klass.getAnnotation(JasmineHelpers.class);
+        if (annotation == null) {
+            return new String[] {"*.js"};
+        }
+        return annotation.value();
+    }
+    
+    private static String[] getSourceFileMatchers(Class<?> klass) throws InitializationError {
+        Source annotation = klass.getAnnotation(Source.class);
+        if (annotation == null) {
+            return new String[] {"*.js"};
+        }
+        return annotation.value();
+    }
+    
+    private static Collection<File> getFilesFrom(String[] matchers, File root) {
+        final Collection<File> files = new ArrayList<File>();
+        
+        for (String matcher : matchers) {
+            int separatorIndex = matcher.lastIndexOf("/");
+            if (-1 == separatorIndex) {
+                files.addAll(FileUtils.listFiles(root, new WildcardFileFilter(matcher), TrueFileFilter.INSTANCE));
+            }
+            
+            files.addAll(FileUtils.listFiles(root,
+                                             new WildcardFileFilter(matcher.substring(separatorIndex + 1)),
+                                             new NameFileFilter(matcher.substring(0, separatorIndex))));
+        }
+        
+        return files;
     }
     
     public JasmineSuite(Class<?> klass, RunnerBuilder builder) throws InitializationError {
@@ -52,27 +102,19 @@ public final class JasmineSuite extends Runner {
             Enumeration<URL> urls = cl.getResources(classResource);
             final File root = new File(urls.nextElement().toString().replace("file:", "").replace(classResource, ""));
 
-            final Collection<File> specFiles = new ArrayList<File>();
+            final Collection<File> specFiles = getFilesFrom(getJasmineSpecFileMatchers(klass), root);
             
-            final String[] matchers = getJasmineSpecFileMatchers(klass);
-            for (String matcher : matchers) {
-                int separatorIndex = matcher.lastIndexOf(File.separatorChar);
-                if (-1 == separatorIndex) {
-                    specFiles.addAll(FileUtils.listFiles(root, new WildcardFileFilter(matcher), TrueFileFilter.INSTANCE));
-                }
-                
-                specFiles.addAll(FileUtils.listFiles(root,
-                                                     new WildcardFileFilter(matcher.substring(separatorIndex + 1)),
-                                                     new NameFileFilter(matcher.substring(0, separatorIndex))));
+            for (File spec : specFiles) {
+                this.specs.add(new JasmineSpecFileDescriber(spec));
             }
             
-            for (File file : specFiles) {
-                if (isSpecFile(file)) {
-                    this.specs.add(new JasmineSpecFileDescriber(file));
-                }
-                this.scriptFiles.add(file);
-            }
+            final LinkedHashSet<File> files = new LinkedHashSet<File>();
+            files.addAll(specFiles);
+            files.addAll(getFilesFrom(getJasmineHelperFileMatchers(klass), root));
+            files.addAll(getFilesFrom(getSourceFileMatchers(klass), root));
             
+            this.scriptFiles.addAll(files);
+            Collections.reverse(this.scriptFiles);
         }
         catch (Exception e) {
             throw new IllegalArgumentException(e);
@@ -94,13 +136,5 @@ public final class JasmineSuite extends Runner {
     public void run(RunNotifier notifier) {
         final JasmineExecutionEnvironment environment = new JasmineExecutionEnvironment();
         environment.executeJUnitTests(scriptFiles, notifier);
-    }
-    
-    private boolean isSpecFile(File specFile) {
-        try {
-            return FileUtils.readFileToString(specFile).startsWith("describe");
-        } catch (IOException e) {
-            return false;
-        }
     }
 }
