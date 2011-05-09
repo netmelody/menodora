@@ -22,29 +22,32 @@ public final class JasmineJunitReporter {
     }
     
     public void reportSpecResults(NativeObject spec) {
-        Object specDesc = NativeObject.getProperty(spec, "description");
-        NativeObject suite = (NativeObject)NativeObject.getProperty(spec, "suite");
-        Object suiteDesc = NativeObject.getProperty(suite, "description");
+        String specDesc = (String)NativeObject.getProperty(spec, "description");
+//        NativeObject suite = (NativeObject)NativeObject.getProperty(spec, "suite");
+//        String suiteDesc = (String)NativeObject.getProperty(suite, "description");
+//        NativeObject parentSuite = (NativeObject)NativeObject.getProperty(suite, "parentSuite");
+        String fullName = (String)NativeObject.callMethod(spec, "getFullName", new Object[0]);
         
         NativeObject results = (NativeObject)NativeObject.callMethod(spec, "results", new Object[0]);
         Boolean passed = (Boolean)NativeObject.callMethod(results, "passed", new Object[0]);
-        System.out.println(passed ? "Passed." : "Failed.");
+        System.out.println(fullName + (passed ? " Passed." : " Failed."));
         
         if (passed) {
-            notifier.fireTestFinished(Description.createTestDescription(Object.class, suiteDesc + " : " + specDesc));
+            notifier.fireTestFinished(Description.createTestDescription(Object.class, specDesc));
             return;
         }
         
-        notifier.fireTestFailure(new Failure(Description.createTestDescription(Object.class, suiteDesc + " : " + specDesc), new Exception()));
+        notifier.fireTestFailure(new Failure(Description.createTestDescription(Object.class, specDesc), new Exception()));
     }
     
     public void reportSpecStarting(NativeObject spec) {
-        Object specDesc = NativeObject.getProperty(spec, "description");
-        NativeObject suite = (NativeObject)NativeObject.getProperty(spec, "suite");
-        Object suiteDesc = NativeObject.getProperty(suite, "description");
-        System.out.println(suiteDesc + " : " + specDesc + " ... ");
+        String specDesc = (String)NativeObject.getProperty(spec, "description");
+//        NativeObject suite = (NativeObject)NativeObject.getProperty(spec, "suite");
+//        String suiteDesc = (String)NativeObject.getProperty(suite, "description");
+        String fullName = (String)NativeObject.callMethod(spec, "getFullName", new Object[0]);
+        System.out.println(fullName + "...");
         
-        notifier.fireTestStarted(Description.createTestDescription(Object.class, suiteDesc + " : " + specDesc));
+        notifier.fireTestStarted(Description.createTestDescription(Object.class, specDesc));
     }
     
     public void reportSuiteResults(NativeObject suite) {
