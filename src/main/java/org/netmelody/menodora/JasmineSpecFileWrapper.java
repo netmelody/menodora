@@ -3,8 +3,6 @@ package org.netmelody.menodora;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.IdentityHashMap;
-import java.util.Map;
 import java.util.Stack;
 
 import org.junit.runner.Description;
@@ -97,9 +95,8 @@ public class JasmineSpecFileWrapper {
             }
             
             parse(node.getFirstChild(), functions);
-            //description = parentDesc;
-            
             parse(node.getNext(), functions);
+            description = parentDesc;
         }
     }
 }
