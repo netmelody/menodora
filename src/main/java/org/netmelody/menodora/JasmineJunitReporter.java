@@ -5,11 +5,11 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.mozilla.javascript.NativeObject;
 
-public class Reporter {
+public class JasmineJunitReporter {
 
     private final RunNotifier notifier;
 
-    public Reporter(RunNotifier notifier) {
+    public JasmineJunitReporter(RunNotifier notifier) {
         this.notifier = notifier;
     }
 

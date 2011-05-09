@@ -40,7 +40,7 @@ public final class JasmineExecutionEnvironment {
         loadJavaScript("/SpecHelper.js");
         loadJavaScript("/PlayerSpec.js");
         
-        global.put("jUnitReporter", global, new Reporter(notifier));
+        global.put("jUnitReporter", global, new JasmineJunitReporter(notifier));
         eval("jasmine.getEnv().addReporter(jUnitReporter);");
         
         try {
