@@ -16,16 +16,15 @@ import org.mozilla.javascript.Token;
 
 public class JasmineSpecFileDescriber {
 
-    private final File specFile;
+    private final Description description;
 
     public JasmineSpecFileDescriber(File specFile) {
-        this.specFile = specFile;
+        description = Description.createSuiteDescription(specFile.getPath());
+        ScriptOrFnNode tree = parseJavascript(specFile);
+        new Describer(description).appendDescriptionOf(tree);
     }
 
     public Description getDescription() {
-        final Description description = Description.createSuiteDescription(specFile.getPath());
-        ScriptOrFnNode tree = parseJavascript(this.specFile);
-        new Describer(description).appendDescriptionOf(tree);
         return description;
     }
     
