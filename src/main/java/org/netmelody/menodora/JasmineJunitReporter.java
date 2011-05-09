@@ -5,7 +5,7 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.mozilla.javascript.NativeObject;
 
-public class JasmineJunitReporter {
+public final class JasmineJunitReporter {
 
     private final RunNotifier notifier;
 

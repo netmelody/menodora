@@ -34,11 +34,10 @@ public final class JasmineExecutionEnvironment {
     }
     
     public void executeJUnitTests(Collection<File> scripts, RunNotifier notifier) {
-        loadJavaScript("/Player.js");
-        loadJavaScript("/Song.js");
-
-        loadJavaScript("/SpecHelper.js");
-        loadJavaScript("/PlayerSpec.js");
+        for (File file : scripts) {
+            System.out.println(file.getPath());
+            loadJavaScript(file.getPath());
+        }
         
         global.put("jUnitReporter", global, new JasmineJunitReporter(notifier));
         eval("jasmine.getEnv().addReporter(jUnitReporter);");

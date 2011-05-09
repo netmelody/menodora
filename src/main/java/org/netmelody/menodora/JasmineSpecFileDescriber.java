@@ -14,7 +14,7 @@ import org.mozilla.javascript.Parser;
 import org.mozilla.javascript.ScriptOrFnNode;
 import org.mozilla.javascript.Token;
 
-public class JasmineSpecFileDescriber {
+public final class JasmineSpecFileDescriber {
 
     private final Description description;
 
