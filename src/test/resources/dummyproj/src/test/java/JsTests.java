@@ -1,14 +1,15 @@
-package org.netmelody.menodora;
+package dummyproj.src.test.java;
 
 import org.junit.runner.RunWith;
+import org.netmelody.menodora.JasmineSuite;
 import org.netmelody.menodora.JasmineSuite.JasmineHelpers;
 import org.netmelody.menodora.JasmineSuite.JasmineSpecs;
 import org.netmelody.menodora.JasmineSuite.Source;
 
 @RunWith(JasmineSuite.class)
-@Source("dummysrc/*.js")
-@JasmineHelpers("dummytests/*.js")
-@JasmineSpecs("dummytests/*Spec.js")
+@Source("src/main/js/*.js")
+@JasmineHelpers("src/test/js/*.js")
+@JasmineSpecs("src/test/js/*Spec.js")
 public class JsTests {
 
 }
