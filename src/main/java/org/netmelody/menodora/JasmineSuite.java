@@ -25,7 +25,7 @@ import org.netmelody.menodora.core.JasmineSpecFileDescriber;
 
 public final class JasmineSuite extends Runner {
     
-    private final Class<?> suiteClass;
+    private final Context context;
     private final List<JasmineSpecFileDescriber> specs = new ArrayList<JasmineSpecFileDescriber>();
     private final List<File> scriptFiles = new ArrayList<File>();
     
@@ -47,10 +47,8 @@ public final class JasmineSuite extends Runner {
     }
     
     public JasmineSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError {
-        this.suiteClass = suiteClass;
-        
         try {
-            final Context context = new Context(this.suiteClass);
+            context = new Context(suiteClass);
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
             final String classResource = suiteClass.getName().replaceAll("\\.", "/")+".class";
             Enumeration<URL> urls = cl.getResources(classResource);
@@ -77,7 +75,7 @@ public final class JasmineSuite extends Runner {
 
     @Override
     public Description getDescription() {
-        final Description description = Description.createSuiteDescription(suiteClass);
+        final Description description = Description.createSuiteDescription(context.getSuiteClass());
         
         for (JasmineSpecFileDescriber spec : this.specs) {
             description.addChild(spec.getDescription());
@@ -89,6 +87,6 @@ public final class JasmineSuite extends Runner {
     @Override
     public void run(RunNotifier notifier) {
         final JasmineExecutionEnvironment environment = new JasmineExecutionEnvironment();
-        environment.executeJasmineTests(scriptFiles, new JasmineJunitReporter(suiteClass, notifier));
+        environment.executeJasmineTests(scriptFiles, new JasmineJunitReporter(context.getSuiteClass(), notifier));
     }
 }
