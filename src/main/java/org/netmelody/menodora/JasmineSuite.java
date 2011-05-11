@@ -40,49 +40,28 @@ public final class JasmineSuite extends Runner {
         public boolean withSimulatedDom() default false;
     }
     
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.TYPE)
-    @Inherited
-    public @interface JasmineSpecs {
-        public String[] value();
-    }
-    
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.TYPE)
-    @Inherited
-    public @interface Source {
-        public String[] value();
-    }
-    
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.TYPE)
-    @Inherited
-    public @interface JasmineHelpers {
-        public String[] value();
-    }
-    
     private static String[] getJasmineSpecFileMatchers(Class<?> suiteClass) throws InitializationError {
-        JasmineSpecs annotation = suiteClass.getAnnotation(JasmineSpecs.class);
+        JasmineJavascriptContext annotation = suiteClass.getAnnotation(JasmineJavascriptContext.class);
         if (annotation == null) {
             return new String[] {"*Spec.js"};
         }
-        return annotation.value();
+        return annotation.jasmineSpecs();
     }
     
     private static String[] getJasmineHelperFileMatchers(Class<?> suiteClass) throws InitializationError {
-        JasmineHelpers annotation = suiteClass.getAnnotation(JasmineHelpers.class);
+        JasmineJavascriptContext annotation = suiteClass.getAnnotation(JasmineJavascriptContext.class);
         if (annotation == null) {
             return new String[] {"*.js"};
         }
-        return annotation.value();
+        return annotation.jasmineHelpers();
     }
     
     private static String[] getSourceFileMatchers(Class<?> suiteClass) throws InitializationError {
-        Source annotation = suiteClass.getAnnotation(Source.class);
+        JasmineJavascriptContext annotation = suiteClass.getAnnotation(JasmineJavascriptContext.class);
         if (annotation == null) {
             return new String[] {"*.js"};
         }
-        return annotation.value();
+        return annotation.source();
     }
     
     private static Collection<File> getFilesFrom(String[] matchers, File root) {
