@@ -24,30 +24,6 @@ public final class JasmineSuite extends Runner {
     private final Class<?> suiteClass;
     private final List<JasmineSpecFileDescriber> specs = new ArrayList<JasmineSpecFileDescriber>();
     private final List<File> scriptFiles = new ArrayList<File>();
-
-    private static String[] getJasmineSpecFileMatchers(Class<?> suiteClass) throws InitializationError {
-        JasmineJavascriptContext annotation = suiteClass.getAnnotation(JasmineJavascriptContext.class);
-        if (annotation == null) {
-            return new String[] {"*Spec.js"};
-        }
-        return annotation.jasmineSpecs();
-    }
-    
-    private static String[] getJasmineHelperFileMatchers(Class<?> suiteClass) throws InitializationError {
-        JasmineJavascriptContext annotation = suiteClass.getAnnotation(JasmineJavascriptContext.class);
-        if (annotation == null) {
-            return new String[] {"*.js"};
-        }
-        return annotation.jasmineHelpers();
-    }
-    
-    private static String[] getSourceFileMatchers(Class<?> suiteClass) throws InitializationError {
-        JasmineJavascriptContext annotation = suiteClass.getAnnotation(JasmineJavascriptContext.class);
-        if (annotation == null) {
-            return new String[] {"*.js"};
-        }
-        return annotation.source();
-    }
     
     private static Collection<File> getFilesFrom(String[] matchers, File root) {
         final Collection<File> files = new ArrayList<File>();
@@ -68,13 +44,15 @@ public final class JasmineSuite extends Runner {
     
     public JasmineSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError {
         this.suiteClass = suiteClass;
+        
         try {
+            final Context context = new Context(this.suiteClass);
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
             final String classResource = suiteClass.getName().replaceAll("\\.", "/")+".class";
             Enumeration<URL> urls = cl.getResources(classResource);
             final File root = new File(urls.nextElement().toString().replace("file:", "").replace(classResource, ""));
 
-            final Collection<File> specFiles = getFilesFrom(getJasmineSpecFileMatchers(suiteClass), root);
+            final Collection<File> specFiles = getFilesFrom(context.getJasmineSpecFileMatchers(), root);
             
             for (File spec : specFiles) {
                 this.specs.add(new JasmineSpecFileDescriber(spec, suiteClass));
@@ -82,8 +60,8 @@ public final class JasmineSuite extends Runner {
             
             final LinkedHashSet<File> files = new LinkedHashSet<File>();
             files.addAll(specFiles);
-            files.addAll(getFilesFrom(getJasmineHelperFileMatchers(suiteClass), root));
-            files.addAll(getFilesFrom(getSourceFileMatchers(suiteClass), root));
+            files.addAll(getFilesFrom(context.getJasmineHelperFileMatchers(), root));
+            files.addAll(getFilesFrom(context.getSourceFileMatchers(), root));
             
             this.scriptFiles.addAll(files);
             Collections.reverse(this.scriptFiles);

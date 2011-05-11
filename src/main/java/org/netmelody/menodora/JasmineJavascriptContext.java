@@ -10,8 +10,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Inherited
 public @interface JasmineJavascriptContext {
-    public String[] source() default {};
-    public String[] jasmineHelpers() default {};
-    public String[] jasmineSpecs() default {};
+    public String[] source() default "*.js";
+    public String[] jasmineHelpers() default "";
+    public String[] jasmineSpecs() default "*Spec.js";
     public boolean withSimulatedDom() default false;
 }
