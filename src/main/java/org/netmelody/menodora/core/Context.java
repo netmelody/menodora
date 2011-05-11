@@ -6,7 +6,6 @@ import java.util.Enumeration;
 
 import org.netmelody.menodora.JasmineJavascriptContext;
 
-
 public final class Context {
 
     @JasmineJavascriptContext private static final class DEFAULT { }
@@ -47,9 +46,9 @@ public final class Context {
     
     public File root() {
         try {
-            ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            final String classResource = suiteClass.getName().replaceAll("\\.", "/")+".class";
-            Enumeration<URL> urls = cl.getResources(classResource);
+            final ClassLoader classLoader = suiteClass.getClassLoader();
+            final String classResource = suiteClass.getName().replaceAll("\\.", "/") + ".class";
+            final Enumeration<URL> urls = classLoader.getResources(classResource);
             final File root = new File(urls.nextElement().toString().replace("file:", "").replace(classResource, ""));
             return root;
         }

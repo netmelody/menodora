@@ -1,6 +1,5 @@
 package org.netmelody.menodora.test;
 
-
-public class JasmineJunitReporterTest {
+public final class JasmineSuiteTest {
 
 }

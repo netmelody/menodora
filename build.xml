@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="CI-Eye" default="build" basedir=".">
+<project name="menodora" default="build" basedir=".">
 
     <path id="project.compile.classpath">
         <fileset dir="vendor/lib" includes="**/*.jar"/>

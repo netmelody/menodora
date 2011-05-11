@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="dummyproj" default="build" basedir=".">
+    
+    <property name="menodora.root" value="../../../.."/>
+
+    <path id="dummyproject.compile.classpath">
+        <fileset dir="${menodora.root}/build" includes="**/*.jar"/>
+        <fileset dir="${menodora.root}/vendor" includes="**/junit-dep*.jar"/>
+    </path>
+
+    <target name="javac" description="Compile java source to bytecode">
+        <mkdir dir="${menodora.root}/build"/>
+        <mkdir dir="${menodora.root}/build/dummyproj"/>
+        <javac srcdir="src/test/java" includes="**" encoding="utf-8" destdir="${menodora.root}/build/dummyproj" source="1.5" target="1.5" debug="true" debuglevel="lines,source">
+            <classpath refid="dummyproject.compile.classpath"/>
+        </javac>
+        
+        <copy todir="${menodora.root}/build/dummyproj">
+            <fileset dir="src/main/js"/>
+            <fileset dir="src/test/js"/>
+        </copy>
+    </target>
+
+    <target name="build" depends="javac" description="Build this project" />
+
+    <target name="clean" description="Cleans this project">
+        <delete dir="${menodora.root}/build/dummyproj" failonerror="false" />
+    </target>
+
+    <target name="jar" depends="clean,build" description="Create a jar file">
+        <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="${menodora.root}/vendor/buildlib/jarjar-1.1.jar"/>
+        <jarjar destfile="${menodora.root}/src/test/resources/dummyproj2/dummyproj2.jar">
+            <fileset dir="${menodora.root}/build/dummyproj"/>
+            <rule pattern="org.netmelody.dummy.**" result="org.netmelody.dummy2.@1"/>
+        </jarjar>
+    </target>
+</project>
