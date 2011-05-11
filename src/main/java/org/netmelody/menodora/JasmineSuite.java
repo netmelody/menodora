@@ -89,6 +89,6 @@ public final class JasmineSuite extends Runner {
     @Override
     public void run(RunNotifier notifier) {
         final JasmineExecutionEnvironment environment = new JasmineExecutionEnvironment();
-        environment.executeJUnitTests(scriptFiles, new JasmineJunitReporter(suiteClass, notifier));
+        environment.executeJasmineTests(scriptFiles, new JasmineJunitReporter(suiteClass, notifier));
     }
 }

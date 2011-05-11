@@ -31,7 +31,7 @@ public final class JasmineExecutionEnvironment {
         loadJavaScript("/jasmine-1.0.2/jasmine.js");
     }
     
-    public void executeJUnitTests(Collection<File> scripts, JasmineReporter reporter) {
+    public void executeJasmineTests(Collection<File> scripts, JasmineReporter reporter) {
         for (File file : scripts) {
             System.out.println(file.getPath());
             loadJavaScript(file);
