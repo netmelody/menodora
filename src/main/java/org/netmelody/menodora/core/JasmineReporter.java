@@ -1,4 +1,4 @@
-package org.netmelody.menodora;
+package org.netmelody.menodora.core;
 
 import org.mozilla.javascript.NativeObject;
 

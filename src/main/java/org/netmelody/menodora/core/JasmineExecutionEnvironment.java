@@ -1,4 +1,4 @@
-package org.netmelody.menodora;
+package org.netmelody.menodora.core;
 
 import java.io.File;
 import java.io.IOException;

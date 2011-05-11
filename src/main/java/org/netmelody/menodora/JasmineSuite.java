@@ -18,6 +18,10 @@ import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
+import org.netmelody.menodora.core.Context;
+import org.netmelody.menodora.core.JasmineExecutionEnvironment;
+import org.netmelody.menodora.core.JasmineJunitReporter;
+import org.netmelody.menodora.core.JasmineSpecFileDescriber;
 
 public final class JasmineSuite extends Runner {
     

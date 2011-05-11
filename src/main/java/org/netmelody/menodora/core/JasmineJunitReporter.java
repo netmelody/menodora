@@ -1,4 +1,4 @@
-package org.netmelody.menodora;
+package org.netmelody.menodora.core;
 
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;

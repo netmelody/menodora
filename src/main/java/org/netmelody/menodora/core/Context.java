@@ -1,4 +1,6 @@
-package org.netmelody.menodora;
+package org.netmelody.menodora.core;
+
+import org.netmelody.menodora.JasmineJavascriptContext;
 
 
 public final class Context {
