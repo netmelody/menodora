@@ -27,6 +27,7 @@
         <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="vendor/buildlib/jarjar-1.1.jar"/>
         <jarjar destfile="build/menodora.jar">
             <fileset dir="build/main"/>
+            <fileset dir="." includes="LICENSE NOTICE README"/>
             <zipfileset src="vendor/lib/commons-io-2.0.1.jar" excludes="**/META-INF/**"/>
             <zipfileset src="vendor/lib/rhino-1.7R2.jar" excludes="**/META-INF/**"/>
             <rule pattern="org.apache.**" result="org.netmelody.menodora.wrapped.@0"/>
