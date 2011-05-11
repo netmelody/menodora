@@ -1,11 +1,6 @@
 package org.netmelody.menodora;
 
 import java.io.File;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,16 +25,6 @@ public final class JasmineSuite extends Runner {
     private final List<JasmineSpecFileDescriber> specs = new ArrayList<JasmineSpecFileDescriber>();
     private final List<File> scriptFiles = new ArrayList<File>();
 
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.TYPE)
-    @Inherited
-    public @interface JasmineJavascriptContext {
-        public String[] source() default {};
-        public String[] jasmineHelpers() default {};
-        public String[] jasmineSpecs() default {};
-        public boolean withSimulatedDom() default false;
-    }
-    
     private static String[] getJasmineSpecFileMatchers(Class<?> suiteClass) throws InitializationError {
         JasmineJavascriptContext annotation = suiteClass.getAnnotation(JasmineJavascriptContext.class);
         if (annotation == null) {

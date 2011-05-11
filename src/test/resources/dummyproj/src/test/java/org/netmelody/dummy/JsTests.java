@@ -1,8 +1,8 @@
 package org.netmelody.dummy;
 
 import org.junit.runner.RunWith;
+import org.netmelody.menodora.JasmineJavascriptContext;
 import org.netmelody.menodora.JasmineSuite;
-import org.netmelody.menodora.JasmineSuite.JasmineJavascriptContext;
 
 @RunWith(JasmineSuite.class)
 @JasmineJavascriptContext(
