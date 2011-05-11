@@ -33,6 +33,16 @@ public final class JasmineSuite extends Runner {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
     @Inherited
+    public @interface JasmineJavascriptContext {
+        public String[] source() default {};
+        public String[] jasmineHelpers() default {};
+        public String[] jasmineSpecs() default {};
+        public boolean withSimulatedDom() default false;
+    }
+    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+    @Inherited
     public @interface JasmineSpecs {
         public String[] value();
     }
