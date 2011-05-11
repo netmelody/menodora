@@ -1,5 +1,9 @@
 package org.netmelody.menodora.core;
 
+import java.io.File;
+import java.net.URL;
+import java.util.Enumeration;
+
 import org.netmelody.menodora.JasmineJavascriptContext;
 
 
@@ -39,5 +43,18 @@ public final class Context {
             annotation = DEFAULT.class.getAnnotation(JasmineJavascriptContext.class);
         }
         return annotation.source();
+    }
+    
+    public File root() {
+        try {
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            final String classResource = suiteClass.getName().replaceAll("\\.", "/")+".class";
+            Enumeration<URL> urls = cl.getResources(classResource);
+            final File root = new File(urls.nextElement().toString().replace("file:", "").replace(classResource, ""));
+            return root;
+        }
+        catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 }

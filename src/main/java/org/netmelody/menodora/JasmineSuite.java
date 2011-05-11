@@ -1,11 +1,9 @@
 package org.netmelody.menodora;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -49,11 +47,7 @@ public final class JasmineSuite extends Runner {
     public JasmineSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError {
         try {
             context = new Context(suiteClass);
-            ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            final String classResource = suiteClass.getName().replaceAll("\\.", "/")+".class";
-            Enumeration<URL> urls = cl.getResources(classResource);
-            final File root = new File(urls.nextElement().toString().replace("file:", "").replace(classResource, ""));
-
+            final File root = context.root();
             final Collection<File> specFiles = getFilesFrom(context.getJasmineSpecFileMatchers(), root);
             
             for (File spec : specFiles) {
