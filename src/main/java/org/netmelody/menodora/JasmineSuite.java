@@ -19,13 +19,13 @@ import org.junit.runners.model.RunnerBuilder;
 import org.netmelody.menodora.core.Context;
 import org.netmelody.menodora.core.JasmineExecutionEnvironment;
 import org.netmelody.menodora.core.JasmineJunitReporter;
-import org.netmelody.menodora.core.JasmineSpecFileDescriber;
+import org.netmelody.menodora.core.JasmineSuiteDescriber;
 
 public final class JasmineSuite extends Runner {
     
     private final Context context;
-    private final List<JasmineSpecFileDescriber> specs = new ArrayList<JasmineSpecFileDescriber>();
     private final List<File> scriptFiles = new ArrayList<File>();
+    private final JasmineSuiteDescriber suiteDescriber;
     
     private static Collection<File> getFilesFrom(String[] matchers, File root) {
         final Collection<File> files = new ArrayList<File>();
@@ -48,14 +48,10 @@ public final class JasmineSuite extends Runner {
         try {
             context = new Context(suiteClass);
             final File root = context.root();
-            final Collection<File> specFiles = getFilesFrom(context.getJasmineSpecFileMatchers(), root);
-            
-            for (File spec : specFiles) {
-                this.specs.add(new JasmineSpecFileDescriber(spec, suiteClass));
-            }
+            suiteDescriber = new JasmineSuiteDescriber(context);
             
             final LinkedHashSet<File> files = new LinkedHashSet<File>();
-            files.addAll(specFiles);
+            files.addAll(getFilesFrom(context.getJasmineSpecFileMatchers(), root));
             files.addAll(getFilesFrom(context.getJasmineHelperFileMatchers(), root));
             files.addAll(getFilesFrom(context.getSourceFileMatchers(), root));
             
@@ -69,18 +65,12 @@ public final class JasmineSuite extends Runner {
 
     @Override
     public Description getDescription() {
-        final Description description = Description.createSuiteDescription(context.getSuiteClass());
-        
-        for (JasmineSpecFileDescriber spec : this.specs) {
-            description.addChild(spec.getDescription());
-        }
-        
-        return description;
+        return suiteDescriber.getDescription();
     }
 
     @Override
     public void run(RunNotifier notifier) {
         final JasmineExecutionEnvironment environment = new JasmineExecutionEnvironment();
-        environment.executeJasmineTests(scriptFiles, new JasmineJunitReporter(context.getSuiteClass(), notifier));
+        environment.executeJasmineTests(context.javascriptLocator(), new JasmineJunitReporter(context.getSuiteClass(), notifier));
     }
 }

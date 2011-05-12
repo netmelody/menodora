@@ -2,9 +2,12 @@ package org.netmelody.menodora.core;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import org.netmelody.menodora.JasmineJavascriptContext;
+import org.netmelody.menodora.core.locator.CompositeLocator;
 import org.netmelody.menodora.core.locator.FileSystemLocator;
 import org.netmelody.menodora.core.locator.Locator;
 
@@ -60,14 +63,20 @@ public final class Context {
     }
     
     public Locator jasmineSpecLocator() {
-        final String[] patterns = getJasmineHelperFileMatchers();
-        for (String pattern : patterns) {
-            return new FileSystemLocator(root(), pattern);
-        }
-        return null;
+        return fileLocatorFor(getJasmineSpecFileMatchers());
     }
     
     public Locator javascriptLocator() {
-        return null;
+        return new CompositeLocator(new Locator[] {fileLocatorFor(getSourceFileMatchers()),
+                                                   fileLocatorFor(getJasmineHelperFileMatchers()),
+                                                   jasmineSpecLocator()});
+    }
+    
+    private Locator fileLocatorFor(String... patterns) {
+        final List<FileSystemLocator> locators = new ArrayList<FileSystemLocator>();
+        for (String pattern : patterns) {
+            locators.add(new FileSystemLocator(root(), pattern));
+        }
+        return new CompositeLocator(locators.toArray(new FileSystemLocator[locators.size()]));
     }
 }

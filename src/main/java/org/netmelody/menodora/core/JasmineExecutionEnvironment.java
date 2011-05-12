@@ -10,6 +10,7 @@ import org.apache.commons.io.IOUtils;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.tools.shell.Global;
+import org.netmelody.menodora.core.locator.Locator;
 
 public final class JasmineExecutionEnvironment {
     
@@ -31,10 +32,10 @@ public final class JasmineExecutionEnvironment {
         loadJavaScript("/jasmine-1.0.2/jasmine.js");
     }
     
-    public void executeJasmineTests(Collection<File> scripts, JasmineReporter reporter) {
-        for (File file : scripts) {
-            System.out.println(file.getPath());
-            loadJavaScript(file);
+    public void executeJasmineTests(Locator javascriptResources, JasmineReporter reporter) {
+        for (String resource : javascriptResources.locate()) {
+            System.out.println(resource);
+            loadJavaScript("/" + resource);
         }
         
         global.put("jUnitReporter", global, reporter);

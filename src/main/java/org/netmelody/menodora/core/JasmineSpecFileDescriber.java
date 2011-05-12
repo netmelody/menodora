@@ -1,8 +1,6 @@
 package org.netmelody.menodora.core;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Stack;
 
 import org.junit.runner.Description;
@@ -18,9 +16,9 @@ public final class JasmineSpecFileDescriber {
 
     private final Description description;
 
-    public JasmineSpecFileDescriber(File specFile, Class<?> suiteClass) {
-        description = Description.createSuiteDescription(specFile.getPath());
-        ScriptOrFnNode tree = parseJavascript(specFile);
+    public JasmineSpecFileDescriber(String specResource, Class<?> suiteClass) {
+        description = Description.createSuiteDescription(specResource);
+        ScriptOrFnNode tree = parseJavascript(specResource, suiteClass);
         new Describer(description, suiteClass).appendDescriptionOf(tree);
     }
 
@@ -28,21 +26,13 @@ public final class JasmineSpecFileDescriber {
         return description;
     }
     
-    private ScriptOrFnNode parseJavascript(File file) {
+    private ScriptOrFnNode parseJavascript(String specResource, Class<?> suiteClass) {
         CompilerEnvirons compilerEnv = new CompilerEnvirons();
         ErrorReporter errorReporter = compilerEnv.getErrorReporter();
 
         Parser parser = new Parser(compilerEnv, errorReporter);
-        String sourceURI;
-
         try {
-            sourceURI = file.getCanonicalPath();
-        } catch (IOException e) {
-            sourceURI = file.toString();
-        }
-
-        try {
-            return parser.parse(new FileReader(file), sourceURI, 1);
+            return parser.parse(new InputStreamReader(suiteClass.getResourceAsStream("/" + specResource)), specResource, 1);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
