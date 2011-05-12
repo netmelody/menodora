@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.Enumeration;
 
 import org.netmelody.menodora.JasmineJavascriptContext;
+import org.netmelody.menodora.core.locator.FileSystemLocator;
+import org.netmelody.menodora.core.locator.Locator;
 
 public final class Context {
 
@@ -55,5 +57,17 @@ public final class Context {
         catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
+    }
+    
+    public Locator jasmineSpecLocator() {
+        final String[] patterns = getJasmineHelperFileMatchers();
+        for (String pattern : patterns) {
+            return new FileSystemLocator(root(), pattern);
+        }
+        return null;
+    }
+    
+    public Locator javascriptLocator() {
+        return null;
     }
 }
