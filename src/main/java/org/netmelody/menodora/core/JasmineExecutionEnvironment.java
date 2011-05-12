@@ -3,7 +3,6 @@ package org.netmelody.menodora.core;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -35,7 +34,7 @@ public final class JasmineExecutionEnvironment {
     public void executeJasmineTests(Locator javascriptResources, JasmineReporter reporter) {
         for (String resource : javascriptResources.locate()) {
             System.out.println(resource);
-            loadJavaScript("/" + resource);
+            loadJavaScript(resource);
         }
         
         global.put("jUnitReporter", global, reporter);
@@ -46,16 +45,6 @@ public final class JasmineExecutionEnvironment {
             FileUtils.writeStringToFile(loader, HTML);
             final String uri = loader.toURI().toString().replaceFirst("^file:/([^/])", "file:///$1");
             eval(String.format("window.location = '%s';", uri));
-        }
-        catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private Object loadJavaScript(File script) {
-        try {
-            String scriptSource = FileUtils.readFileToString(script);
-            return context.compileString(scriptSource, script.getPath(), 1, null).exec(context, global);
         }
         catch (IOException e) {
             throw new IllegalStateException(e);

@@ -34,7 +34,7 @@ public final class FileSystemLocator implements Locator {
         }
         
         
-        final int rootLength = root.getPath().length() + 1;
+        final int rootLength = root.getPath().length();
         final List<String> result = new ArrayList<String>();
         for (File file : files) {
             result.add(file.getPath().substring(rootLength));
