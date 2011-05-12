@@ -18,15 +18,16 @@ public final class JasmineExecutionEnvironment {
     private final Context context = ContextFactory.getGlobal().enterContext();
     private final Global global = new Global();
     
-    public JasmineExecutionEnvironment() {
+    public JasmineExecutionEnvironment(boolean withDom) {
         context.setOptimizationLevel(-1);
         context.setLanguageVersion(Context.VERSION_1_5);
         global.init(context);
         
-        eval("Packages.org.mozilla.javascript.Context.getCurrentContext().setOptimizationLevel(-1);");
-        
-        loadJavaScript("/env.js-1.2/env.rhino.1.2.js");
-        eval("Envjs.scriptTypes['text/javascript'] = true;");
+        if (withDom) {
+            eval("Packages.org.mozilla.javascript.Context.getCurrentContext().setOptimizationLevel(-1);");
+            loadJavaScript("/env.js-1.2/env.rhino.1.2.js");
+            eval("Envjs.scriptTypes['text/javascript'] = true;");
+        }
         
         loadJavaScript("/jasmine-1.0.2/jasmine.js");
     }
@@ -39,7 +40,7 @@ public final class JasmineExecutionEnvironment {
         
         global.put("jUnitReporter", global, reporter);
         eval("jasmine.getEnv().addReporter(jUnitReporter);");
-        
+//        eval("jasmine.getEnv().execute();");
         try {
             File loader = File.createTempFile("jasmine", ".html");
             FileUtils.writeStringToFile(loader, HTML);
