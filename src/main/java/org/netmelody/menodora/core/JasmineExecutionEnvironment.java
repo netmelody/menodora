@@ -15,45 +15,22 @@ public final class JasmineExecutionEnvironment {
     
     private final Context context = ContextFactory.getGlobal().enterContext();
     private final Global global = new Global();
-    
-    private static final String GOOF =
-        "var setTimeout, clearTimeout, setInterval, clearInterval;\n" +
-        "(function () {\n" +
-        "    var timer = new java.util.Timer();\n" +
-        "    var counter = 1;\n" +
-        "    var ids = {};\n" +
-        "    setTimeout = function (fn,delay) {\n" +
-        "        var id = counter++;\n" +
-        "        ids[id] = new JavaAdapter(java.util.TimerTask,{run: fn});\n" +
-        "        timer.schedule(ids[id],delay);\n" +
-        "         return id;\n" +
-        "    }\n" +
-        "        clearTimeout = function (id) {\n" +
-        "        ids[id].cancel();\n" +
-        "        timer.purge();\n" +
-        "        delete ids[id];\n" +
-        "    }\n" +
-        "        setInterval = function (fn,delay) {\n" +
-        "        var id = counter++;\n" +
-        "        ids[id] = new JavaAdapter(java.util.TimerTask,{run: fn});\n" +
-        "        timer.schedule(ids[id],delay,delay);\n" +
-        "        return id;\n" +
-        "    }\n" +
-        "    clearInterval = clearTimeout;\n" +
-        "})()";
+    private final boolean withDom;
     
     public JasmineExecutionEnvironment(boolean withDom) {
+        this.withDom = withDom;
+        
         context.setOptimizationLevel(-1);
         context.setLanguageVersion(Context.VERSION_1_5);
         global.init(context);
         
-        if (withDom) {
+        if (this.withDom) {
             eval("Packages.org.mozilla.javascript.Context.getCurrentContext().setOptimizationLevel(-1);");
             loadJavaScript("/env.js-1.2/env.rhino.1.2.js");
             eval("Envjs.scriptTypes['text/javascript'] = true;");
         }
         else {
-            eval(GOOF);
+            loadJavaScript("/menodora-js/fake.scheduler.js");
         }
         
         loadJavaScript("/jasmine-1.0.2/jasmine.js");
@@ -67,16 +44,21 @@ public final class JasmineExecutionEnvironment {
         
         global.put("jUnitReporter", global, reporter);
         eval("jasmine.getEnv().addReporter(jUnitReporter);");
-        eval("jasmine.getEnv().execute();");
-//        try {
-//            File loader = File.createTempFile("jasmine", ".html");
-//            FileUtils.writeStringToFile(loader, "<html><script type=\"text/javascript\">jasmine.getEnv().execute();</script></html>");
-//            final String uri = loader.toURI().toString().replaceFirst("^file:/([^/])", "file:///$1");
-//            eval(String.format("window.location = '%s';", uri));
-//        }
-//        catch (IOException e) {
-//            throw new IllegalStateException(e);
-//        }
+        
+        try {
+            if (this.withDom) {
+                File loader = File.createTempFile("jasmine", ".html");
+                FileUtils.writeStringToFile(loader, "<html><script type='text/javascript'>jasmine.getEnv().execute();</script></html>");
+                final String uri = loader.toURI().toString().replaceFirst("^file:/([^/])", "file:///$1");
+                eval(String.format("window.location = '%s';", uri));
+            }
+            else {
+                eval("jasmine.getEnv().execute();");
+            }
+        }
+        catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
     }
     
     private Object loadJavaScript(String resource) {
