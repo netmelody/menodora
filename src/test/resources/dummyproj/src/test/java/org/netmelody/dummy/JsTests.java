@@ -9,7 +9,7 @@ import org.netmelody.menodora.JasmineSuite;
         source="dummyjs/*.js",
         jasmineHelpers="dummyjstests/*.js",
         jasmineSpecs="dummyjstests/*Spec.js",
-        withSimulatedDom=true)
+        withSimulatedDom=false)
 public class JsTests {
 
 }
