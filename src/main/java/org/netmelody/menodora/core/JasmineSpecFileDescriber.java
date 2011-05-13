@@ -6,11 +6,12 @@ import java.util.Stack;
 import org.junit.runner.Description;
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.ErrorReporter;
-import org.mozilla.javascript.FunctionNode;
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Parser;
-import org.mozilla.javascript.ScriptOrFnNode;
 import org.mozilla.javascript.Token;
+import org.mozilla.javascript.ast.AstRoot;
+import org.mozilla.javascript.ast.FunctionNode;
+import org.mozilla.javascript.ast.ScriptNode;
 
 public final class JasmineSpecFileDescriber {
 
@@ -18,7 +19,7 @@ public final class JasmineSpecFileDescriber {
 
     public JasmineSpecFileDescriber(String specResource, Class<?> suiteClass) {
         description = Description.createSuiteDescription(specResource);
-        ScriptOrFnNode tree = parseJavascript(specResource, suiteClass);
+        AstRoot tree = parseJavascript(specResource, suiteClass);
         new Describer(description, suiteClass).appendDescriptionOf(tree);
     }
 
@@ -26,7 +27,7 @@ public final class JasmineSpecFileDescriber {
         return description;
     }
     
-    private ScriptOrFnNode parseJavascript(String specResource, Class<?> suiteClass) {
+    private AstRoot parseJavascript(String specResource, Class<?> suiteClass) {
         CompilerEnvirons compilerEnv = new CompilerEnvirons();
         ErrorReporter errorReporter = compilerEnv.getErrorReporter();
 
@@ -43,7 +44,7 @@ public final class JasmineSpecFileDescriber {
         private final Class<?> suiteClass;
         private Description description;
         
-        public void appendDescriptionOf(ScriptOrFnNode tree) {
+        public void appendDescriptionOf(AstRoot tree) {
             parseFunction(tree);
         }
 
@@ -52,8 +53,8 @@ public final class JasmineSpecFileDescriber {
             this.suiteClass = suiteClass;
         }
 
-        public void parseFunction(ScriptOrFnNode node) {
-            Stack<ScriptOrFnNode> functions = new Stack<ScriptOrFnNode>();
+        public void parseFunction(ScriptNode node) {
+            Stack<ScriptNode> functions = new Stack<ScriptNode>();
             int functionCount = node.getFunctionCount();
             for (int i = functionCount - 1; i >= 0; i--) {
                 FunctionNode functionNode = node.getFunctionNode(i);
@@ -62,7 +63,7 @@ public final class JasmineSpecFileDescriber {
             parse(node, functions);
         }
         
-        private void parse(Node node, Stack<ScriptOrFnNode> functions) {
+        private void parse(Node node, Stack<ScriptNode> functions) {
             if (node == null) {
                 return;
             }
@@ -78,7 +79,7 @@ public final class JasmineSpecFileDescriber {
                                                                            node.getNext().getString()));
                 }
             }
-            if (node.getType() == Token.FUNCTION && !(node instanceof ScriptOrFnNode)) {
+            if (node.getType() == Token.FUNCTION && !(node instanceof FunctionNode) && !(node instanceof AstRoot)) {
                 parseFunction(functions.pop());
             }
             

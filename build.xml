@@ -85,7 +85,7 @@
             <fileset dir="build/main"/>
             <fileset dir="." includes="LICENSE NOTICE README"/>
             <zipfileset src="vendor/lib/commons-io-2.0.1.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="vendor/lib/rhino-1.7R2.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="vendor/lib/rhino-1.7R3-custom.jar" excludes="**/META-INF/**"/>
             <rule pattern="org.apache.**" result="org.netmelody.menodora.wrapped.@0"/>
             <rule pattern="org.mozilla.**" result="org.netmelody.menodora.wrapped.@0"/>
             
