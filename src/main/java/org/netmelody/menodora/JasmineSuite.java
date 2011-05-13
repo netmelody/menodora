@@ -70,7 +70,7 @@ public final class JasmineSuite extends Runner {
 
     @Override
     public void run(RunNotifier notifier) {
-        final JasmineExecutionEnvironment environment = new JasmineExecutionEnvironment(false);
+        final JasmineExecutionEnvironment environment = new JasmineExecutionEnvironment(context.withSimulatedDom());
         environment.executeJasmineTests(context.javascriptLocator(), new JasmineJunitReporter(context.getSuiteClass(), notifier));
     }
 }

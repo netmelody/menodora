@@ -49,6 +49,14 @@ public final class Context {
         return annotation.source();
     }
     
+    public boolean withSimulatedDom() {
+        JasmineJavascriptContext annotation = this.suiteClass.getAnnotation(JasmineJavascriptContext.class);
+        if (annotation == null) {
+            annotation = DEFAULT.class.getAnnotation(JasmineJavascriptContext.class);
+        }
+        return annotation.withSimulatedDom();
+    }
+    
     public File root() {
         try {
             final ClassLoader classLoader = suiteClass.getClassLoader();
