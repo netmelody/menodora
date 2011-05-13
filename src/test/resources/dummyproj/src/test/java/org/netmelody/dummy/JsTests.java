@@ -8,7 +8,8 @@ import org.netmelody.menodora.JasmineSuite;
 @JasmineJavascriptContext(
         source="dummyjs/*.js",
         jasmineHelpers="dummyjstests/*.js",
-        jasmineSpecs="dummyjstests/*Spec.js")
+        jasmineSpecs="dummyjstests/*Spec.js",
+        withSimulatedDom=false)
 public class JsTests {
 
 }

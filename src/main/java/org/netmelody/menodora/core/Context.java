@@ -25,7 +25,7 @@ public final class Context {
         return this.suiteClass;
     }
     
-    public String[] getJasmineSpecFileMatchers() {
+    private String[] getJasmineSpecFileMatchers() {
         JasmineJavascriptContext annotation = this.suiteClass.getAnnotation(JasmineJavascriptContext.class);
         if (annotation == null) {
             annotation = DEFAULT.class.getAnnotation(JasmineJavascriptContext.class);
@@ -33,7 +33,7 @@ public final class Context {
         return annotation.jasmineSpecs();
     }
     
-    public String[] getJasmineHelperFileMatchers() {
+    private String[] getJasmineHelperFileMatchers() {
         JasmineJavascriptContext annotation = this.suiteClass.getAnnotation(JasmineJavascriptContext.class);
         if (annotation == null) {
             annotation = DEFAULT.class.getAnnotation(JasmineJavascriptContext.class);
@@ -41,7 +41,7 @@ public final class Context {
         return annotation.jasmineHelpers();
     }
     
-    public String[] getSourceFileMatchers() {
+    private String[] getSourceFileMatchers() {
         JasmineJavascriptContext annotation = this.suiteClass.getAnnotation(JasmineJavascriptContext.class);
         if (annotation == null) {
             annotation = DEFAULT.class.getAnnotation(JasmineJavascriptContext.class);
