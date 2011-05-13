@@ -5,6 +5,10 @@
         <fileset dir="vendor/lib" includes="**/*.jar"/>
     </path>
 
+    <path id="project.build.classpath">
+        <fileset dir="vendor/buildlib" includes="hamcrest*.jar"/>
+    </path>
+
     <target name="javac" description="Compile java source to bytecode">
         <mkdir dir="build"/>
         <mkdir dir="build/main"/>
@@ -17,7 +21,45 @@
         </copy>
     </target>
 
-    <target name="build" depends="javac" description="Build this project" />
+    <target name="test" depends="javac" description="Tests this project">
+        <mkdir dir="build"/>
+        <mkdir dir="build/test"/>
+        <mkdir dir="build/doc"/>
+        
+        <copy todir="build/test">
+            <fileset dir="src/test/resources"/>
+        </copy>
+        
+        <javac srcdir="src/test/resources/dummyproj/src/test/java" includes="**" encoding="utf-8" destdir="build/test" source="1.5" target="1.5" debug="true" debuglevel="lines,source">
+            <classpath refid="project.compile.classpath"/>
+            <classpath refid="project.build.classpath"/>
+            <classpath><pathelement location="build/main"/></classpath>
+        </javac>
+        
+        <javac srcdir="src/test/java" includes="**" encoding="utf-8" destdir="build/test" source="1.5" target="1.5" debug="true" debuglevel="lines,source">
+            <classpath refid="project.compile.classpath"/>
+            <classpath refid="project.build.classpath"/>
+            <classpath><pathelement location="build/main"/></classpath>
+        </javac>
+        
+        <junit printsummary="yes" haltonfailure="yes">
+            <classpath>
+                <pathelement path="${project.compile.classpath}"/>
+                <pathelement path="${project.build.classpath}"/>
+                <pathelement location="build/main"/>
+                <pathelement location="build/test"/>
+            </classpath>
+          
+            <formatter type="plain"/>
+            <batchtest fork="yes" todir="build/doc">
+                <fileset dir="src/test/java">
+                    <include name="**/*Test.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="build" depends="test" description="Build this project" />
 
     <target name="clean" description="Cleans this project">
         <delete dir="build" failonerror="false" />

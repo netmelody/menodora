@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.netmelody.menodora.core.Context;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.both;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -26,7 +25,10 @@ public final class ContextTest {
     retrievesTheRootFromAClassFileInAJar() throws Exception {
         final Class<?> suiteClass = Class.forName("org.netmelody.dummy2.JsTests", true, createClassLoader());
         final Context context = new Context(suiteClass);
-        assertThat(context.root().getPath(), both(startsWith("jar:")).and(endsWith("dummyproj2.jar!")));
+        
+        final String path = context.root().getPath();
+        assertThat(path, startsWith("jar:"));
+        assertThat(path, endsWith("dummyproj2.jar!"));
     }
     
     private static ClassLoader createClassLoader() {
