@@ -27,7 +27,9 @@
         <mkdir dir="build/doc"/>
         
         <copy todir="build/test">
-            <fileset dir="src/test/resources"/>
+            <fileset dir="src/test/resources/dummyproj/src/main/js"/>
+            <fileset dir="src/test/resources/dummyproj/src/test/js"/>
+            <fileset dir="src/test/resources/dummyproj2"/>
         </copy>
         
         <javac srcdir="src/test/resources/dummyproj/src/test/java" includes="**" encoding="utf-8" destdir="build/test" source="1.5" target="1.5" debug="true" debuglevel="lines,source">
@@ -43,9 +45,9 @@
         </javac>
         
         <junit printsummary="yes" haltonfailure="yes">
+            <classpath refid="project.compile.classpath"/>
+            <classpath refid="project.build.classpath"/>
             <classpath>
-                <pathelement path="${project.compile.classpath}"/>
-                <pathelement path="${project.build.classpath}"/>
                 <pathelement location="build/main"/>
                 <pathelement location="build/test"/>
             </classpath>
