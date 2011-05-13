@@ -77,10 +77,6 @@ public final class JasmineSpecFileDescriber {
                     description.addChild(Description.createTestDescription(this.suiteClass,
                                                                            node.getNext().getString()));
                 }
-                System.out.println(node.getString());
-            }
-            if (node.getType() == Token.STRING) {
-                System.out.println(node.getString());
             }
             if (node.getType() == Token.FUNCTION && !(node instanceof ScriptOrFnNode)) {
                 parseFunction(functions.pop());

@@ -38,7 +38,6 @@ public final class JasmineExecutionEnvironment {
     
     public void executeJasmineTests(Locator javascriptResources, JasmineReporter reporter) {
         for (String resource : javascriptResources.locate()) {
-            System.out.println(resource);
             loadJavaScript(resource);
         }
         
