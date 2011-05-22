@@ -1244,7 +1244,7 @@ Envjs.loadFrame = function(frame, url){
  * Copyright 2008-2010 John Resig, under the MIT License
  */
 
-var __context__ = Packages.org.mozilla.javascript.Context.getCurrentContext();
+var __context__ = __rhino__.Context.getCurrentContext();
 
 Envjs.platform       = "Rhino";
 Envjs.revision       = "1.7.0.rc2";
@@ -1330,10 +1330,6 @@ Envjs.eval = function(context, source, name){
     );
 };
 
-//Temporary patch for parser module
-Packages.org.mozilla.javascript.Context.
-    getCurrentContext().setOptimizationLevel(-1);
-
 /**
  * Rhino provides a very succinct 'sync'
  * @param {Function} fn
@@ -1370,9 +1366,8 @@ Envjs.sleep = function(millseconds){
  * provides callback hook for when the system exits
  */
 Envjs.onExit = function(callback){
-    var rhino = Packages.org.mozilla.javascript,
-        contextFactory =  __context__.getFactory(),
-        listener = new rhino.ContextFactory.Listener({
+    var contextFactory =  __context__.getFactory(),
+        listener = new __rhino__.ContextFactory.Listener({
             contextReleased: function(context){
                 if(context === __context__)
                     console.log('context released', context);

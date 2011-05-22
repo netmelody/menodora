@@ -35,7 +35,7 @@ public final class JasmineSpecFileDescriber {
         try {
             return parser.parse(new InputStreamReader(suiteClass.getResourceAsStream(specResource)), specResource, 1);
         } catch (Exception e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException(specResource, e);
         }
     }
     

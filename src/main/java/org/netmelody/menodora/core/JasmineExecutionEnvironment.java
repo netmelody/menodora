@@ -24,7 +24,8 @@ public final class JasmineExecutionEnvironment {
         context.setLanguageVersion(Context.VERSION_1_5);
         global.init(context);
         
-        if (this.withDom) {
+       if (this.withDom) {
+            eval("var __rhino__ = Packages." + Context.class.getName().replace(".Context", ";"));
             eval("Packages." + Context.class.getName() + ".getCurrentContext().setOptimizationLevel(-1);");
             loadJavaScript("/env.js-1.2/env.rhino.1.2.js");
             eval("Envjs.scriptTypes['text/javascript'] = true;");
