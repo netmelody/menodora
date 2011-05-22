@@ -24,8 +24,7 @@ public final class FileSystemLocatorTest {
         
         final FileSystemLocator locator = new FileSystemLocator(folder.getRoot(), "myfile.txt");
         
-        assertThat(locator.locate(), contains(File.separator + "myfile.txt",
-                                              File.separator + "subfolder" + File.separator + "myfile.txt"));
+        assertThat(locator.locate(), contains("/myfile.txt", "/subfolder/myfile.txt"));
     }
     
 }
