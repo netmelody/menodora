@@ -6,12 +6,13 @@ import java.util.Stack;
 import org.junit.runner.Description;
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.ErrorReporter;
-import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Parser;
 import org.mozilla.javascript.Token;
+import org.mozilla.javascript.ast.AstNode;
 import org.mozilla.javascript.ast.AstRoot;
-import org.mozilla.javascript.ast.FunctionNode;
-import org.mozilla.javascript.ast.ScriptNode;
+import org.mozilla.javascript.ast.FunctionCall;
+import org.mozilla.javascript.ast.NodeVisitor;
+import org.mozilla.javascript.ast.StringLiteral;
 
 public final class JasmineSpecFileDescriber {
 
@@ -20,7 +21,7 @@ public final class JasmineSpecFileDescriber {
     public JasmineSpecFileDescriber(String specResource, Class<?> suiteClass) {
         description = Description.createSuiteDescription(specResource);
         AstRoot tree = parseJavascript(specResource, suiteClass);
-        new Describer(description, suiteClass).appendDescriptionOf(tree);
+        tree.visit(new SpecNodeVisitor(suiteClass, description));
     }
 
     public Description getDescription() {
@@ -39,53 +40,57 @@ public final class JasmineSpecFileDescriber {
         }
     }
     
-    private static final class Describer {
+    private static class SpecNodeVisitor implements NodeVisitor {
+        private static class NodeDesc {
+            int depth;
+            Description description;
+            
+            public static NodeDesc of(int nodeDepth, Description nodeDescription) {
+                final NodeDesc result = new NodeDesc();
+                result.depth = nodeDepth;
+                result.description = nodeDescription;
+                return result;
+            }
+        }
         
         private final Class<?> suiteClass;
-        private Description description;
+        private final Stack<NodeDesc> stack = new Stack<NodeDesc>();
         
-        public void appendDescriptionOf(AstRoot tree) {
-            parseFunction(tree);
-        }
-
-        public Describer(Description description, Class<?> suiteClass) {
-            this.description = description;
+        public SpecNodeVisitor(Class<?> suiteClass, Description rootDescription) {
             this.suiteClass = suiteClass;
-        }
-
-        public void parseFunction(ScriptNode node) {
-            Stack<ScriptNode> functions = new Stack<ScriptNode>();
-            int functionCount = node.getFunctionCount();
-            for (int i = functionCount - 1; i >= 0; i--) {
-                FunctionNode functionNode = node.getFunctionNode(i);
-                functions.push(functionNode);
-            }
-            parse(node, functions);
+            stack.push(NodeDesc.of(0, rootDescription));
         }
         
-        private void parse(Node node, Stack<ScriptNode> functions) {
-            if (node == null) {
-                return;
-            }
-            Description parentDesc = description;
-            if (node.getType() == Token.NAME ) {
-                if ("describe".equals(node.getString())) {
-                    final Description suiteDesc = Description.createSuiteDescription(node.getNext().getString());
-                    description.addChild(suiteDesc);
-                    description = suiteDesc;
-                }
-                if ("it".equals(node.getString())) {
-                    description.addChild(Description.createTestDescription(this.suiteClass,
-                                                                           node.getNext().getString()));
-                }
-            }
-            if (node.getType() == Token.FUNCTION && !(node instanceof FunctionNode) && !(node instanceof AstRoot)) {
-                parseFunction(functions.pop());
+        @Override
+        public boolean visit(AstNode node) {
+            if (node.getType() != Token.NAME) {
+                return true;
             }
             
-            parse(node.getFirstChild(), functions);
-            parse(node.getNext(), functions);
-            description = parentDesc;
+            if ("describe".equals(node.getString())) {
+                final String desc = ((StringLiteral)((FunctionCall)node.getParent()).getArguments().get(0)).getValue();
+                Description suiteDesc = Description.createSuiteDescription(desc);
+                
+                while (stack.peek().depth >= node.depth()) {
+                    stack.pop();
+                }
+                stack.peek().description.addChild(suiteDesc);
+                stack.push(NodeDesc.of(node.depth(), suiteDesc));
+                return true;
+            }
+            
+            if ("it".equals(node.getString())) {
+                final String desc = ((StringLiteral)((FunctionCall)node.getParent()).getArguments().get(0)).getValue();
+                Description testDescription = Description.createTestDescription(this.suiteClass, desc);
+                
+                while (stack.peek().depth >= node.depth()) {
+                    stack.pop();
+                }
+                stack.peek().description.addChild(testDescription);
+                return false;
+            }
+            
+            return true;
         }
     }
 }
