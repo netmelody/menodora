@@ -31,6 +31,8 @@ public final class JasmineExecutionEnvironment {
             eval("Envjs.scriptTypes['text/javascript'] = true;");
         }
         else {
+            final Timer timer = new Timer();
+            global.put("__timer__", global, timer);
             loadJavaScript("/menodora-js/fake.scheduler.js");
         }
         
@@ -54,6 +56,7 @@ public final class JasmineExecutionEnvironment {
             }
             else {
                 eval("jasmine.getEnv().execute();");
+                eval("__timer__.done();");
             }
         }
         catch (Exception e) {

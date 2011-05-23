@@ -4,8 +4,7 @@ var setTimeout,
     clearInterval;
 
 (function () {
-    var timer = new java.util.Timer(),
-        counter = 1,
+    var counter = 1,
         ids = {};
         
     function task(fn) {
@@ -16,19 +15,19 @@ var setTimeout,
 
     setTimeout = function (fn, delay) {
         var id = task(fn);
-        timer.schedule(ids[id], delay);
+        __timer__.schedule(ids[id], delay);
         return id;
     };
 
     clearTimeout = function (id) {
         ids[id].cancel();
-        timer.purge();
+        __timer__.purge();
         delete ids[id];
     };
 
     setInterval = function (fn, delay) {
         var id = task(fn);
-        timer.schedule(ids[id], delay, delay);
+        __timer__.schedule(ids[id], delay, delay);
         return id;
     };
 
