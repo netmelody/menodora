@@ -1,8 +1,11 @@
 package org.netmelody.menodora.core;
 
+import junit.framework.AssertionFailedError;
+
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
+import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
 
 public final class JasmineJunitReporter implements JasmineReporter {
@@ -42,7 +45,16 @@ public final class JasmineJunitReporter implements JasmineReporter {
             return;
         }
         
-        notifier.fireTestFailure(new Failure(Description.createTestDescription(suiteClass, specDesc), new Exception()));
+        String message = "";
+        NativeArray items = (NativeArray)NativeObject.callMethod(results, "getItems", new Object[0]);
+        for (Object item : items) {
+            Boolean good = (Boolean)NativeObject.callMethod((NativeObject)item, "passed", new Object[0]);
+            if (!good) {
+                message = (String)NativeObject.getProperty((NativeObject)item, "message");
+                break;
+            }
+        }
+        notifier.fireTestFailure(new Failure(Description.createTestDescription(suiteClass, specDesc), new AssertionFailedError(message)));
     }
     
     @Override
