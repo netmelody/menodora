@@ -13,19 +13,16 @@ public final class Timer {
         final TimerTaskWrapper wrapper = new TimerTaskWrapper(task);
         wrappers.add(wrapper);
         timer.schedule(wrapper, delay);
-        System.out.println("ONCE");
     }
     
     public void schedule(TimerTask task, long delay, long period) {
         final TimerTaskWrapper wrapper = new TimerTaskWrapper(task);
         wrappers.add(wrapper);
         timer.schedule(wrapper, delay, period);
-        System.out.println("REPEATEDLY");
     }
     
     public void purge() {
         timer.purge();
-        System.out.println("PURGE");
     }
     
     public void done() {
