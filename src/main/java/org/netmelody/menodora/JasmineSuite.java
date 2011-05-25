@@ -7,7 +7,7 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
 import org.netmelody.menodora.core.Context;
 import org.netmelody.menodora.core.JasmineExecutionEnvironment;
-import org.netmelody.menodora.core.JasmineJunitReporter;
+import org.netmelody.menodora.core.JasmineJUnitReporter;
 import org.netmelody.menodora.core.JasmineSuiteDescriber;
 
 public final class JasmineSuite extends Runner {
@@ -33,6 +33,6 @@ public final class JasmineSuite extends Runner {
     @Override
     public void run(RunNotifier notifier) {
         final JasmineExecutionEnvironment environment = new JasmineExecutionEnvironment(context.withSimulatedDom());
-        environment.executeJasmineTests(context.javascriptLocator(), new JasmineJunitReporter(context.getSuiteClass(), notifier));
+        environment.executeJasmineTests(context.javascriptLocator(), new JasmineJUnitReporter(context.getSuiteClass(), notifier));
     }
 }

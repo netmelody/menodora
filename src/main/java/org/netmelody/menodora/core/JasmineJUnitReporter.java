@@ -8,12 +8,12 @@ import org.junit.runner.notification.RunNotifier;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
 
-public final class JasmineJunitReporter implements JasmineReporter {
+public final class JasmineJUnitReporter implements JasmineReporter {
 
     private final RunNotifier notifier;
     private final Class<?> suiteClass;
 
-    public JasmineJunitReporter(Class<?> suiteClass, RunNotifier notifier) {
+    public JasmineJUnitReporter(Class<?> suiteClass, RunNotifier notifier) {
         this.suiteClass = suiteClass;
         this.notifier = notifier;
     }
