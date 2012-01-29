@@ -19,6 +19,8 @@ public final class ClasspathLocator implements Locator {
     
     @Override
     public List<String> locate() {
+        //dummyjstests/PlayerSpec.js
+        reflections.getResources(Pattern.compile(".*Spec.js"));
         return ImmutableList.copyOf(reflections.getResources(pattern));
     }
 }

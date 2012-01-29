@@ -103,7 +103,7 @@ public final class Context {
     private Locator classpathLocatorFor(String... patterns) {
         final List<Locator> locators = new ArrayList<Locator>();
         for (String pattern : patterns) {
-            locators.add(new ClasspathLocator(reflections, Pattern.compile(pattern.replaceAll("\\*", ".*"))));
+            locators.add(new ClasspathLocator(reflections, Pattern.compile(".*" + pattern.replaceAll("\\*", ".*"))));
         }
         return new CompositeLocator(locators.toArray(new Locator[locators.size()]));
     }
