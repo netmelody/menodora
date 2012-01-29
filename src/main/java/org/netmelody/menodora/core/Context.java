@@ -5,12 +5,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.netmelody.menodora.JasmineJavascriptContext;
+import org.netmelody.menodora.core.locator.ClasspathLocator;
 import org.netmelody.menodora.core.locator.CompositeLocator;
-import org.netmelody.menodora.core.locator.FileSystemLocator;
 import org.netmelody.menodora.core.locator.Locator;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
@@ -23,9 +22,14 @@ public final class Context {
     @JasmineJavascriptContext private static final class DEFAULT { }
     
     private final Class<?> suiteClass;
+    private final Reflections reflections;
 
     public Context(Class<?> suiteClass) {
         this.suiteClass = suiteClass;
+        this.reflections = new Reflections(new ConfigurationBuilder()
+                                   .filterInputsBy(new FilterBuilder.Exclude(".*\\.class"))
+                                   .setUrls(ClasspathHelper.forClassLoader(suiteClass.getClassLoader()))
+                                   .setScanners(new ResourcesScanner()));
     }
     
     public Class<?> getSuiteClass() {
@@ -65,11 +69,6 @@ public final class Context {
     }
     
     public Iterable<String> reflectionsExample() {
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
-        .filterInputsBy(new FilterBuilder.Exclude(".*\\.class"))
-        .setUrls(ClasspathHelper.forClassLoader(suiteClass.getClassLoader()))
-        .setScanners(new ResourcesScanner()));
-        
         return reflections.getResources(Pattern.compile(".*\\.js"));
     }
     
@@ -92,20 +91,20 @@ public final class Context {
     }
     
     public Locator jasmineSpecLocator() {
-        return fileLocatorFor(getJasmineSpecFileMatchers());
+        return classpathLocatorFor(getJasmineSpecFileMatchers());
     }
     
     public Locator javascriptLocator() {
-        return new CompositeLocator(new Locator[] {fileLocatorFor(getSourceFileMatchers()),
-                                                   fileLocatorFor(getJasmineHelperFileMatchers()),
+        return new CompositeLocator(new Locator[] {classpathLocatorFor(getSourceFileMatchers()),
+                                                   classpathLocatorFor(getJasmineHelperFileMatchers()),
                                                    jasmineSpecLocator()});
     }
     
-    private Locator fileLocatorFor(String... patterns) {
-        final List<FileSystemLocator> locators = new ArrayList<FileSystemLocator>();
+    private Locator classpathLocatorFor(String... patterns) {
+        final List<Locator> locators = new ArrayList<Locator>();
         for (String pattern : patterns) {
-            locators.add(new FileSystemLocator(root(), pattern));
+            locators.add(new ClasspathLocator(reflections, Pattern.compile(pattern.replaceAll("\\*", ".*"))));
         }
-        return new CompositeLocator(locators.toArray(new FileSystemLocator[locators.size()]));
+        return new CompositeLocator(locators.toArray(new Locator[locators.size()]));
     }
 }
