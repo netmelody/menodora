@@ -5,11 +5,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.netmelody.menodora.JasmineJavascriptContext;
 import org.netmelody.menodora.core.locator.CompositeLocator;
 import org.netmelody.menodora.core.locator.FileSystemLocator;
 import org.netmelody.menodora.core.locator.Locator;
+import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 
 public final class Context {
 
@@ -57,12 +64,26 @@ public final class Context {
         return annotation.withSimulatedDom();
     }
     
+    public Iterable<String> reflectionsExample() {
+        Reflections reflections = new Reflections(new ConfigurationBuilder()
+        .filterInputsBy(new FilterBuilder.Exclude(".*\\.class"))
+        .setUrls(ClasspathHelper.forClassLoader(suiteClass.getClassLoader()))
+        .setScanners(new ResourcesScanner()));
+        
+        return reflections.getResources(Pattern.compile(".*\\.js"));
+    }
+    
     public File root() {
         try {
             final ClassLoader classLoader = suiteClass.getClassLoader();
             final String classResource = suiteClass.getName().replaceAll("\\.", "/") + ".class";
             final Enumeration<URL> urls = classLoader.getResources(classResource);
-            final File root = new File(urls.nextElement().toString().replace("file:", "").replace(classResource, ""));
+            //String decode = URLDecoder.decode(urls.nextElement().getFile(), "UTF-8");
+            final String rootPath = urls.nextElement().toString().replace("file:", "").replace(classResource, "");
+            final File root = new File(rootPath);
+            if (!root.isDirectory()) {
+//                throw new IllegalStateException(String.format("Unrecognised root path, %s", rootPath));
+            }
             return root;
         }
         catch (Exception e) {

@@ -5,6 +5,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.netmelody.menodora.core.Context;
 
@@ -29,6 +30,21 @@ public final class ContextTest {
         final String path = context.root().getPath();
         assertThat(path, startsWith("jar:"));
         assertThat(path, endsWith("dummyproj2.jar!"));
+    }
+
+    @Test public void
+    canScanInAJar() throws Exception {
+        final Class<?> suiteClass = Class.forName("org.netmelody.dummy2.JsTests", true, createClassLoader());
+        final Context context = new Context(suiteClass);
+        
+        Iterable<String> locate = context.reflectionsExample();
+        assertThat(locate, Matchers.containsInAnyOrder("jasmine-1.0.2/jasmine.js",
+                                                       "env.js-1.2/env.rhino.1.2.js",
+                                                       "menodora-js/fake.scheduler.js",
+                                                       "dummyjs/Song.js",
+                                                       "dummyjs/Player.js",
+                                                       "dummyjstests/SpecHelper.js",
+                                                       "dummyjstests/PlayerSpec.js"));
     }
     
     private static ClassLoader createClassLoader() {
