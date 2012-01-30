@@ -46,7 +46,7 @@ public final class ContextTest {
                                                        "dummyjstests/SpecHelper.js",
                                                        "dummyjstests/PlayerSpec.js"));
     }
-    
+
     private static ClassLoader createClassLoader() {
         try {
             final List<URL> urls = new ArrayList<URL>();
