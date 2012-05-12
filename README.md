@@ -1,5 +1,5 @@
 Menodora
-=====
+========
 Menodora is a JUnit test runner for Jasmine JavaScript tests, which you can [download] and use.
 
 #### Usage
