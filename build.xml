@@ -152,7 +152,9 @@
     </target>
     <target name="release" description="Create a release jar file" depends="-for-release,jar-all"/>
     <target name="bundle" depends="release">
-        <copy file="menodora.pom" tofile="build/menodora-${version.label}.pom"/>
+        <copy file="menodora.pom" tofile="build/menodora-${version.label}.pom">
+            <filterset><filter token="VERSION" value="${version.label}"/></filterset>
+        </copy>
         <exec executable="gpg" dir="build"><arg value="-ab"/><arg value="menodora-${version.label}.pom"/></exec>
         <exec executable="gpg" dir="build"><arg value="-ab"/><arg value="menodora-${version.label}.jar"/></exec>
         <exec executable="gpg" dir="build"><arg value="-ab"/><arg value="menodora-${version.label}-javadoc.jar"/></exec>

@@ -4,7 +4,7 @@
   <artifactId>menodora</artifactId>
   <packaging>jar</packaging>
   <name>Menodora</name>
-  <version>0.0.6</version>
+  <version>@VERSION@</version>
   <description>Menodora is JUnit runners for Jasmine JavaScript tests.</description>
   <url>http://netmelody.org/menodora</url>
   <licenses>
