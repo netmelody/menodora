@@ -16,4 +16,4 @@ public class JsTests { }
 ```
 Now you can run this class like you would any other JUnit test.
 
-[download]: https://github.com/netmelody/panto/downloads
+[download]: https://github.com/netmelody/menodora/downloads
