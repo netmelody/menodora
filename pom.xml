@@ -1,0 +1,39 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.netmelody.menodora</groupId>
+    <artifactId>menodora</artifactId>
+    <version>@VERSION@</version>
+    <packaging>jar</packaging>
+
+    <name>Menodora</name>
+    <description>Menodora is JUnit runners for Jasmine JavaScript tests.</description>
+    <url>http://netmelody.org/menodora</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>http://github.com/netmelody/menodora</url>
+        <connection>scm:git:git://github.com/netmelody/menodora.git</connection>
+        <developerConnection>scm:git:git@github.com:netmelody/menodora.git</developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>scarytom</id>
+            <name>Tom Denley</name>
+            <email>t.denley@netmelody.org</email>
+        </developer>
+        <developer>
+            <id>SamirTalwar</id>
+            <name>Samir Talwar</name>
+            <email>samir@noodlesandwich.com</email>
+        </developer>
+    </developers>
+</project>
