@@ -6,9 +6,9 @@ import org.netmelody.menodora.JasmineSuite;
 
 @RunWith(JasmineSuite.class)
 @JasmineJavascriptContext(
-        source="dummyjs/*.js",
-        jasmineHelpers="dummyjstests/*.js",
-        jasmineSpecs="dummyjstests/*Spec.js",
+        source="org/netmelody/dummy/main/*.js",
+        jasmineHelpers="org/netmelody/dummy/test/*.js",
+        jasmineSpecs="org/netmelody/dummy/test/*Spec.js",
         withSimulatedDom=true)
 public class JsTestsWithDom {
 

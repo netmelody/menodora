@@ -9,13 +9,14 @@ public class JasmineSpecFileDescriberTest {
 
     @Test public void
     loadsASpec() {
-        JasmineSpecFileDescriber describer = new JasmineSpecFileDescriber("/dummyjstests/PlayerSpec.js", JsTests.class);
-        
+        JasmineSpecFileDescriber describer = new JasmineSpecFileDescriber(
+                "/org/netmelody/dummy/test/PlayerSpec.js", JsTests.class);
+
         Description description = describer.getDescription();
-        
+
         out(description, "");
     }
-    
+
     private void out(Description description, String prefix) {
         System.out.println(prefix + description.toString());
         for (Description child : description.getChildren()) {

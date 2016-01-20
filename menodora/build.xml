@@ -29,7 +29,7 @@
         <javac srcdir="src/main/java" includes="**" encoding="utf-8" destdir="build/main" source="1.5" target="1.5" debug="true" debuglevel="lines,source">
             <classpath refid="project.compile.classpath"/>
         </javac>
-        
+
         <copy todir="build/main">
             <fileset dir="src/main/js"/>
         </copy>
@@ -39,25 +39,17 @@
         <mkdir dir="build"/>
         <mkdir dir="build/test"/>
         <mkdir dir="build/doc"/>
-        
+
         <copy todir="build/test">
-            <fileset dir="src/test/resources/dummyproj/src/main/js"/>
-            <fileset dir="src/test/resources/dummyproj/src/test/js"/>
-            <fileset dir="src/test/resources/dummyproj2"/>
+            <fileset dir="src/test/resources"/>
         </copy>
-        
-        <javac srcdir="src/test/resources/dummyproj/src/test/java" includes="**" encoding="utf-8" destdir="build/test" source="1.5" target="1.5" debug="true" debuglevel="lines,source">
-            <classpath refid="project.compile.classpath"/>
-            <classpath refid="project.build.classpath"/>
-            <classpath><pathelement location="build/main"/></classpath>
-        </javac>
-        
+
         <javac srcdir="src/test/java" includes="**" encoding="utf-8" destdir="build/test" source="1.5" target="1.5" debug="true" debuglevel="lines,source">
             <classpath refid="project.compile.classpath"/>
             <classpath refid="project.build.classpath"/>
             <classpath><pathelement location="build/main"/></classpath>
         </javac>
-        
+
         <junit printsummary="yes" haltonfailure="yes">
             <classpath refid="project.compile.classpath"/>
             <classpath refid="project.build.classpath"/>
@@ -65,7 +57,7 @@
                 <pathelement location="build/main"/>
                 <pathelement location="build/test"/>
             </classpath>
-          
+
             <formatter type="plain"/>
             <batchtest fork="yes" todir="build/doc">
                 <fileset dir="src/test/java">
@@ -94,7 +86,7 @@
             <rule pattern="org.slf4j.**" result="org.netmelody.menodora.wrapped.@0"/>
             <rule pattern="com.google.**" result="org.netmelody.menodora.wrapped.@0"/>
             <rule pattern="org.reflections.**" result="org.netmelody.menodora.wrapped.@0"/>
-            
+
             <manifest>
                 <attribute name="Built-By" value="${user.name}"/>
                 <attribute name="Implementation-Vendor" value="netmelody.org"/>

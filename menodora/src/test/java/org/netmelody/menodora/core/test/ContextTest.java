@@ -7,11 +7,9 @@ import org.junit.Test;
 import org.netmelody.menodora.core.Context;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.startsWith;
 
 public final class ContextTest {
     @Test public void
