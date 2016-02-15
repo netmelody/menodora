@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.netmelody.menodora</groupId>
         <artifactId>menodora-parent</artifactId>
-        <version>@VERSION@</version>
+        <version>0.0.7-SNAPSHOT</version>
     </parent>
 
     <artifactId>menodora</artifactId>
