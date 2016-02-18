@@ -1,4 +1,15 @@
-bin
+# Maven
+target
+
+# Ant
 build
+bin
+
+# Eclipse
 out
-.idea/workspace.xml
+
+# IntelliJ IDEA
+.idea
+*.iml
+*.ipr
+*.iws

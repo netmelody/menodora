@@ -1,0 +1,61 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.netmelody.menodora</groupId>
+    <artifactId>menodora-parent</artifactId>
+    <version>0.0.7-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Menodora Parent</name>
+    <description>Menodora is JUnit runners for Jasmine JavaScript tests.</description>
+    <url>http://netmelody.org/menodora</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>http://github.com/netmelody/menodora</url>
+        <connection>scm:git:git://github.com/netmelody/menodora.git</connection>
+        <developerConnection>scm:git:git@github.com:netmelody/menodora.git</developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>scarytom</id>
+            <name>Tom Denley</name>
+            <email>t.denley@netmelody.org</email>
+        </developer>
+        <developer>
+            <id>SamirTalwar</id>
+            <name>Samir Talwar</name>
+            <email>samir@noodlesandwich.com</email>
+        </developer>
+    </developers>
+
+    <modules>
+        <module>menodora</module>
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.3</version>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
