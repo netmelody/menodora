@@ -21,10 +21,10 @@ public final class FileSystemLocatorTest {
     locatesFiles() throws IOException {
         FileUtils.touch(new File(folder.getRoot(), "myfile.txt"));
         FileUtils.touch(new File(folder.getRoot(), "subfolder/myfile.txt"));
-        
+
         final FileSystemLocator locator = new FileSystemLocator(folder.getRoot(), "myfile.txt");
-        
+
         assertThat(locator.locate(), contains("/myfile.txt", "/subfolder/myfile.txt"));
     }
-    
+
 }

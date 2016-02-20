@@ -5,5 +5,5 @@ import java.util.List;
 public interface Locator {
 
     List<String> locate();
-    
+
 }

@@ -11,10 +11,10 @@ import org.netmelody.menodora.core.JasmineJUnitReporter;
 import org.netmelody.menodora.core.JasmineSuiteDescriber;
 
 public final class JasmineSuite extends Runner {
-    
+
     private final Context context;
     private final JasmineSuiteDescriber suiteDescriber;
-    
+
     public JasmineSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError {
         try {
             context = new Context(suiteClass);

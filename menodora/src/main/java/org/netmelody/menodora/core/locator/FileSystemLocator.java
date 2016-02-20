@@ -18,11 +18,11 @@ public final class FileSystemLocator implements Locator {
         this.root = root;
         this.pattern = pattern;
     }
-    
+
     @Override
     public List<String> locate() {
         final List<File> files = new ArrayList<File>();
-        
+
         int separatorIndex = pattern.lastIndexOf("/");
         if (-1 == separatorIndex) {
             files.addAll(FileUtils.listFiles(root, new WildcardFileFilter(pattern), TrueFileFilter.INSTANCE));
@@ -32,14 +32,14 @@ public final class FileSystemLocator implements Locator {
                                              new WildcardFileFilter(pattern.substring(separatorIndex + 1)),
                                              new NameFileFilter(pattern.substring(0, separatorIndex))));
         }
-        
-        
+
+
         final int rootLength = root.getPath().length();
         final List<String> result = new ArrayList<String>();
         for (File file : files) {
             result.add(file.getPath().substring(rootLength).replaceAll("\\" + File.separator, "/"));
         }
-        
+
         return result;
     }
 }

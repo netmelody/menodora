@@ -22,12 +22,12 @@ public final class JasmineJUnitReporter implements JasmineReporter {
     public void reportRunnerResults(NativeObject runner) {
 //        System.out.println("Jasmine Runner Finished.");
     }
-    
+
     @Override
     public void reportRunnerStarting(NativeObject runner) {
 //        System.out.println("Jasmine Runner Started.");
     }
-    
+
     @Override
     public void reportSpecResults(NativeObject spec) {
         String specDesc = (String)NativeObject.getProperty(spec, "description");
@@ -35,16 +35,16 @@ public final class JasmineJUnitReporter implements JasmineReporter {
 //        String suiteDesc = (String)NativeObject.getProperty(suite, "description");
 //        NativeObject parentSuite = (NativeObject)NativeObject.getProperty(suite, "parentSuite");
 //        String fullName = (String)NativeObject.callMethod(spec, "getFullName", new Object[0]);
-        
+
         NativeObject results = (NativeObject)NativeObject.callMethod(spec, "results", new Object[0]);
         Boolean passed = (Boolean)NativeObject.callMethod(results, "passed", new Object[0]);
 //        System.out.println(fullName + (passed ? " Passed." : " Failed."));
-        
+
         if (passed) {
             notifier.fireTestFinished(Description.createTestDescription(suiteClass, specDesc));
             return;
         }
-        
+
         String message = "";
         NativeArray items = (NativeArray)NativeObject.callMethod(results, "getItems", new Object[0]);
         for (Object item : items) {
@@ -56,7 +56,7 @@ public final class JasmineJUnitReporter implements JasmineReporter {
         }
         notifier.fireTestFailure(new Failure(Description.createTestDescription(suiteClass, specDesc), new AssertionFailedError(message)));
     }
-    
+
     @Override
     public void reportSpecStarting(NativeObject spec) {
         String specDesc = (String)NativeObject.getProperty(spec, "description");
@@ -64,10 +64,10 @@ public final class JasmineJUnitReporter implements JasmineReporter {
 //        String suiteDesc = (String)NativeObject.getProperty(suite, "description");
 //        String fullName = (String)NativeObject.callMethod(spec, "getFullName", new Object[0]);
 //        System.out.println(fullName + "...");
-        
+
         notifier.fireTestStarted(Description.createTestDescription(suiteClass, specDesc));
     }
-    
+
     @Override
     public void reportSuiteResults(NativeObject suite) {
 //        Object suiteDesc = NativeObject.getProperty(suite, "description");

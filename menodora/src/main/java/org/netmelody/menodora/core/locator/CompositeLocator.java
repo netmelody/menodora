@@ -15,21 +15,21 @@ public final class CompositeLocator implements Locator {
         if (null == locators) {
             return;
         }
-        
+
         this.locators.addAll(Arrays.asList(locators));
         Collections.reverse(this.locators);
     }
-    
+
     @Override
     public List<String> locate() {
         final Set<String> targetSet = new LinkedHashSet<String>();
-        
+
         for (Locator locator : locators) {
             final List<String> targets = locator.locate();
             Collections.reverse(targets);
             targetSet.addAll(targets);
         }
-        
+
         List<String> result = new ArrayList<String>(targetSet);
         Collections.reverse(result);
         return result;

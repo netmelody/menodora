@@ -27,7 +27,7 @@ public final class JasmineSpecFileDescriber {
     public Description getDescription() {
         return description;
     }
-    
+
     private AstRoot parseJavascript(String specResource, Class<?> suiteClass) {
         CompilerEnvirons compilerEnv = new CompilerEnvirons();
         ErrorReporter errorReporter = compilerEnv.getErrorReporter();
@@ -39,12 +39,12 @@ public final class JasmineSpecFileDescriber {
             throw new IllegalStateException(specResource, e);
         }
     }
-    
+
     private static class SpecNodeVisitor implements NodeVisitor {
         private static class NodeDesc {
             int depth;
             Description description;
-            
+
             public static NodeDesc of(int nodeDepth, Description nodeDescription) {
                 final NodeDesc result = new NodeDesc();
                 result.depth = nodeDepth;
@@ -52,25 +52,25 @@ public final class JasmineSpecFileDescriber {
                 return result;
             }
         }
-        
+
         private final Class<?> suiteClass;
         private final Stack<NodeDesc> stack = new Stack<NodeDesc>();
-        
+
         public SpecNodeVisitor(Class<?> suiteClass, Description rootDescription) {
             this.suiteClass = suiteClass;
             stack.push(NodeDesc.of(0, rootDescription));
         }
-        
+
         @Override
         public boolean visit(AstNode node) {
             if (node.getType() != Token.NAME) {
                 return true;
             }
-            
+
             if ("describe".equals(node.getString())) {
                 final String desc = ((StringLiteral)((FunctionCall)node.getParent()).getArguments().get(0)).getValue();
                 Description suiteDesc = Description.createSuiteDescription(desc);
-                
+
                 while (stack.peek().depth >= node.depth()) {
                     stack.pop();
                 }
@@ -78,18 +78,18 @@ public final class JasmineSpecFileDescriber {
                 stack.push(NodeDesc.of(node.depth(), suiteDesc));
                 return true;
             }
-            
+
             if ("it".equals(node.getString())) {
                 final String desc = ((StringLiteral)((FunctionCall)node.getParent()).getArguments().get(0)).getValue();
                 Description testDescription = Description.createTestDescription(this.suiteClass, desc);
-                
+
                 while (stack.peek().depth >= node.depth()) {
                     stack.pop();
                 }
                 stack.peek().description.addChild(testDescription);
                 return false;
             }
-            
+
             return true;
         }
     }
