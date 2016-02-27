@@ -7,9 +7,9 @@ import org.junit.runner.notification.RunNotifier;
 import org.netmelody.menodora.core.Context;
 import org.netmelody.menodora.core.JasmineJUnitReporter;
 import org.netmelody.menodora.core.JavaScriptEnvironment;
-import org.netmelody.menodora.core.TestRunner;
+import org.netmelody.menodora.core.JavaScriptTestRunner;
 
-public class JasmineTestRunner implements TestRunner {
+public class JasmineTestRunner implements JavaScriptTestRunner {
     private final Context context;
     private final JavaScriptEnvironment environment;
 
@@ -18,6 +18,7 @@ public class JasmineTestRunner implements TestRunner {
         this.environment = environment;
     }
 
+    @Override
     public void executeTests(RunNotifier notifier) {
         for (String resource : context.allJavaScriptResources()) {
             environment.loadResource(resource);

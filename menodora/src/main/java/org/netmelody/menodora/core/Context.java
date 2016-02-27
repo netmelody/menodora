@@ -1,5 +1,6 @@
 package org.netmelody.menodora.core;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -14,20 +15,30 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
 public final class Context {
-    @JavaScriptContext
-    private static final class DEFAULT { }
-
-    private static final JavaScriptContext DEFAULT_ANNOTATION = DEFAULT.class.getAnnotation(JavaScriptContext.class);
-
     private final Class<?> suiteClass;
-    private final Reflections reflections;
 
+    private final Reflections reflections;
     public Context(Class<?> suiteClass) {
         this.suiteClass = suiteClass;
         this.reflections = new Reflections(new ConfigurationBuilder()
                                    .filterInputsBy(new FilterBuilder.Exclude(".*\\.class"))
                                    .setUrls(ClasspathHelper.forClassLoader(suiteClass.getClassLoader()))
                                    .setScanners(new ResourcesScanner()));
+    }
+
+    public JavaScriptTestRunner constructRunner(JavaScriptEnvironment environment) {
+        try {
+            return annotation().runner().getConstructor(Context.class, JavaScriptEnvironment.class)
+                    .newInstance(this, environment);
+        } catch (InstantiationException e) {
+            throw new IllegalArgumentException(e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException(e);
+        } catch (InvocationTargetException e) {
+            throw new IllegalArgumentException(e);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     public Class<?> getSuiteClass() {
@@ -70,10 +81,6 @@ public final class Context {
     }
 
     private JavaScriptContext annotation() {
-        JavaScriptContext annotation = suiteClass.getAnnotation(JavaScriptContext.class);
-        if (annotation == null) {
-            return DEFAULT_ANNOTATION;
-        }
-        return annotation;
+        return suiteClass.getAnnotation(JavaScriptContext.class);
     }
 }

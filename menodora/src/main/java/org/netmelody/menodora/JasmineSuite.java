@@ -7,7 +7,6 @@ import org.netmelody.menodora.core.Context;
 import org.netmelody.menodora.core.ExecutionEnvironmentPreparation;
 import org.netmelody.menodora.core.JasmineSuiteDescriber;
 import org.netmelody.menodora.core.JavaScriptEnvironment;
-import org.netmelody.menodora.jasmine.JasmineTestRunner;
 
 public final class JasmineSuite extends Runner {
 
@@ -32,6 +31,6 @@ public final class JasmineSuite extends Runner {
     public void run(RunNotifier notifier) {
         JavaScriptEnvironment environment = new JavaScriptEnvironment();
         new ExecutionEnvironmentPreparation(context.withSimulatedDom()).prepare(environment);
-        new JasmineTestRunner(context, environment).executeTests(notifier);
+        context.constructRunner(environment).executeTests(notifier);
     }
 }
