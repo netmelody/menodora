@@ -2,7 +2,7 @@ package org.netmelody.menodora.core;
 
 import java.io.InputStreamReader;
 import java.util.Stack;
-
+import org.junit.runner.Describable;
 import org.junit.runner.Description;
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.ErrorReporter;
@@ -14,7 +14,7 @@ import org.mozilla.javascript.ast.FunctionCall;
 import org.mozilla.javascript.ast.NodeVisitor;
 import org.mozilla.javascript.ast.StringLiteral;
 
-public final class JasmineSpecFileDescriber {
+public final class JasmineSpecFileDescriber implements Describable {
 
     private final Description description;
 
@@ -24,6 +24,7 @@ public final class JasmineSpecFileDescriber {
         tree.visit(new SpecNodeVisitor(suiteClass, description));
     }
 
+    @Override
     public Description getDescription() {
         return description;
     }
