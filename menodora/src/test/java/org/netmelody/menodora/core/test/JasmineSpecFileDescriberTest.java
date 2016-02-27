@@ -5,6 +5,10 @@ import org.junit.runner.Description;
 import org.netmelody.dummy.JsTests;
 import org.netmelody.menodora.core.JasmineSpecFileDescriber;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.netmelody.menodora.core.test.DescriptionMatcher.aDescription;
+
 public class JasmineSpecFileDescriberTest {
 
     @Test public void
@@ -14,13 +18,15 @@ public class JasmineSpecFileDescriberTest {
 
         Description description = describer.getDescription();
 
-        out(description, "");
-    }
-
-    private void out(Description description, String prefix) {
-        System.out.println(prefix + description.toString());
-        for (Description child : description.getChildren()) {
-            out(child, prefix + "=");
-        }
+        assertThat(description,
+                is(aDescription("/org/netmelody/dummy/test/PlayerSpec.js").withChildren(
+                        aDescription("Player").withChildren(
+                                aDescription("should be able to play a Song", JsTests.class),
+                                aDescription("when song has been paused").withChildren(
+                                        aDescription("should indicate that the song is currently paused", JsTests.class),
+                                        aDescription("should be possible to resume", JsTests.class)),
+                                aDescription("tells the current song if the user has made it a favorite", JsTests.class),
+                                aDescription("#resume").withChildren(
+                                        aDescription("should throw an exception if song is already playing", JsTests.class))))));
     }
 }
