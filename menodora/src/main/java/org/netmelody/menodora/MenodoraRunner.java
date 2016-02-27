@@ -8,12 +8,12 @@ import org.netmelody.menodora.core.ExecutionEnvironmentPreparation;
 import org.netmelody.menodora.core.JavaScriptEnvironment;
 import org.netmelody.menodora.core.TestStyle;
 
-public final class JasmineSuite extends Runner {
+public final class MenodoraRunner extends Runner {
 
     private final Context context;
     private final TestStyle testStyle;
 
-    public JasmineSuite(Class<?> suiteClass) {
+    public MenodoraRunner(Class<?> suiteClass) {
         try {
             context = new Context(suiteClass);
             testStyle = context.testStyle();
