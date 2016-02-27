@@ -20,19 +20,19 @@ public final class ExecutionEnvironmentPreparation {
     private void prepareWithoutSimulatedDom(JavaScriptEnvironment environment) {
         final Timer timer = new Timer();
         environment.setGlobal("__timer__", timer);
-        environment.loadResource("/menodora-js/fake.scheduler.js");
+        environment.loadResource("menodora-js/fake.scheduler.js");
         prepareCommon(environment);
     }
 
     private void prepareWithSimulatedDom(JavaScriptEnvironment environment) {
         environment.eval("var __rhino__ = Packages." + Context.class.getName().replace(".Context", ";"));
         environment.eval("Packages." + Context.class.getName() + ".getCurrentContext().setOptimizationLevel(-1);");
-        environment.loadResource("/env.js-1.2/env.rhino.1.2.js");
+        environment.loadResource("env.js-1.2/env.rhino.1.2.js");
         environment.eval("Envjs.scriptTypes['text/javascript'] = true;");
         prepareCommon(environment);
     }
 
     private void prepareCommon(JavaScriptEnvironment environment) {
-        environment.loadResource("/jasmine-1.0.2/jasmine.js");
+        environment.loadResource("jasmine-1.0.2/jasmine.js");
     }
 }

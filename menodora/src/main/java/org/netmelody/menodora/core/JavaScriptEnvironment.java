@@ -26,13 +26,18 @@ public class JavaScriptEnvironment {
     }
 
     public void loadResource(String resource) {
-        URL url = getClass().getResource(resource);
+        URL url = getClass().getClassLoader().getResource(resource);
+        if (url == null) {
+            throw new IllegalArgumentException("No such resource: " + resource);
+        }
+
         String scriptSource;
         try {
             scriptSource = IOUtils.toString(url.openStream());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+
         String path = url.toExternalForm();
         context.compileString(scriptSource, path, 1, null).exec(context, global);
     }

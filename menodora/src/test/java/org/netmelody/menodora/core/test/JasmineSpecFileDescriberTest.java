@@ -14,12 +14,12 @@ public class JasmineSpecFileDescriberTest {
     @Test public void
     loadsASpec() {
         JasmineSpecFileDescriber describer = new JasmineSpecFileDescriber(
-                "/org/netmelody/dummy/test/PlayerSpec.js", JsTests.class);
+                "org/netmelody/dummy/test/PlayerSpec.js", JsTests.class);
 
         Description description = describer.getDescription();
 
         assertThat(description,
-                is(aDescription("/org/netmelody/dummy/test/PlayerSpec.js").withChildren(
+                is(aDescription("org/netmelody/dummy/test/PlayerSpec.js").withChildren(
                         aDescription("Player").withChildren(
                                 aDescription("should be able to play a Song", JsTests.class),
                                 aDescription("when song has been paused").withChildren(
