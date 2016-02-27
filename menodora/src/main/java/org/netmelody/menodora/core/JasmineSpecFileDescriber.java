@@ -1,5 +1,6 @@
 package org.netmelody.menodora.core;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Stack;
 import org.junit.runner.Describable;
@@ -16,16 +17,19 @@ import org.mozilla.javascript.ast.StringLiteral;
 
 public final class JasmineSpecFileDescriber implements Describable {
 
-    private final Description description;
+    private final String specResource;
+    private final Class<?> suiteClass;
 
     public JasmineSpecFileDescriber(String specResource, Class<?> suiteClass) {
-        description = Description.createSuiteDescription(specResource);
-        AstRoot tree = parseJavascript(specResource, suiteClass);
-        tree.visit(new SpecNodeVisitor(suiteClass, description));
+        this.specResource = specResource;
+        this.suiteClass = suiteClass;
     }
 
     @Override
     public Description getDescription() {
+        Description description = Description.createSuiteDescription(specResource);
+        AstRoot tree = parseJavascript(specResource, suiteClass);
+        tree.visit(new SpecNodeVisitor(suiteClass, description));
         return description;
     }
 
@@ -36,7 +40,7 @@ public final class JasmineSpecFileDescriber implements Describable {
         Parser parser = new Parser(compilerEnv, errorReporter);
         try {
             return parser.parse(new InputStreamReader(suiteClass.getClassLoader().getResourceAsStream(specResource)), specResource, 1);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new IllegalStateException(specResource, e);
         }
     }
