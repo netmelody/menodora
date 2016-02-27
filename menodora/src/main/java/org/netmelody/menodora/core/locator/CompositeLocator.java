@@ -1,8 +1,7 @@
 package org.netmelody.menodora.core.locator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,23 +15,15 @@ public final class CompositeLocator implements Locator {
     }
 
     public CompositeLocator(List<Locator> locators) {
-        this.locators = new ArrayList<Locator>(locators);
-        Collections.reverse(this.locators);
+        this.locators = locators;
     }
 
     @Override
-    public List<String> locate() {
-        final Set<String> targetSet = new LinkedHashSet<String>();
-
+    public Collection<String> locate() {
+        Set<String> results = new LinkedHashSet<String>();
         for (Locator locator : locators) {
-            final List<String> targets = locator.locate();
-            Collections.reverse(targets);
-            targetSet.addAll(targets);
+            results.addAll(locator.locate());
         }
-
-        List<String> result = new ArrayList<String>(targetSet);
-        Collections.reverse(result);
-        return result;
+        return results;
     }
-
 }

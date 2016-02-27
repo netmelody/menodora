@@ -1,13 +1,12 @@
 package org.netmelody.menodora.core.locator;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 import java.util.regex.Pattern;
 import org.reflections.Reflections;
 
 import static com.google.common.base.Predicates.contains;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Collections2.filter;
 
 public final class ClasspathLocator implements Locator {
 
@@ -20,8 +19,8 @@ public final class ClasspathLocator implements Locator {
     }
 
     @Override
-    public List<String> locate() {
+    public Collection<String> locate() {
         final Set<String> resources = reflections.getResources(Pattern.compile(".*\\.js"));
-        return newArrayList(filter(resources, contains(pattern)));
+        return filter(resources, contains(pattern));
     }
 }

@@ -1,7 +1,5 @@
 package org.netmelody.menodora.core;
 
-import java.util.List;
-
 import org.junit.runner.Description;
 
 public final class JasmineSuiteDescriber {
@@ -15,8 +13,7 @@ public final class JasmineSuiteDescriber {
     public Description getDescription() {
         final Description description = Description.createSuiteDescription(context.getSuiteClass());
 
-        final List<String> testResources = context.allTestResources();
-        for (String testResource : testResources) {
+        for (String testResource : context.allTestResources()) {
             description.addChild(new JasmineSpecFileDescriber(testResource, context.getSuiteClass()).getDescription());
         }
 

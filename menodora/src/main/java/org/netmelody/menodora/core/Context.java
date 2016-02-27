@@ -42,11 +42,11 @@ public final class Context {
         return reflections.getResources(Pattern.compile(".*\\.js"));
     }
 
-    public List<String> allJavaScriptResources() {
+    public Iterable<String> allJavaScriptResources() {
         return javascriptLocator().locate();
     }
 
-    public List<String> allTestResources() {
+    public Iterable<String> allTestResources() {
         return testsLocator().locate();
     }
 

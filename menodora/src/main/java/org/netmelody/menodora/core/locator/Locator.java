@@ -1,9 +1,9 @@
 package org.netmelody.menodora.core.locator;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface Locator {
 
-    List<String> locate();
+    Collection<String> locate();
 
 }
