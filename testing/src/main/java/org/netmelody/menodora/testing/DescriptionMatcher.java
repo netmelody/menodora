@@ -1,4 +1,4 @@
-package org.netmelody.menodora.test;
+package org.netmelody.menodora.testing;
 
 import java.util.Collections;
 import java.util.List;

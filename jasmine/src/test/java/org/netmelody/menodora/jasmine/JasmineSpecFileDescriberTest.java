@@ -6,7 +6,7 @@ import org.netmelody.dummy.JsTests;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.netmelody.menodora.test.DescriptionMatcher.aDescription;
+import static org.netmelody.menodora.testing.DescriptionMatcher.aDescription;
 
 public class JasmineSpecFileDescriberTest {
 

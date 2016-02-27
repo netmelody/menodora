@@ -8,9 +8,16 @@
     <version>0.0.7-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Menodora Parent</name>
+    <name>Menodora</name>
     <description>Menodora is JUnit runners for Jasmine JavaScript tests.</description>
     <url>http://netmelody.org/menodora</url>
+
+    <modules>
+        <module>all</module>
+        <module>core</module>
+        <module>jasmine</module>
+        <module>testing</module>
+    </modules>
 
     <licenses>
         <license>
@@ -38,10 +45,6 @@
             <email>samir@noodlesandwich.com</email>
         </developer>
     </developers>
-
-    <modules>
-        <module>menodora</module>
-    </modules>
 
     <build>
         <pluginManagement>
