@@ -2,7 +2,7 @@ package org.netmelody.menodora.core;
 
 import org.mozilla.javascript.NativeObject;
 
-public interface JasmineReporter {
+public interface JavaScriptReporter {
 
     void reportRunnerResults(NativeObject runner);
 

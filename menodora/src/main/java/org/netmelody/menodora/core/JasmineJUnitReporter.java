@@ -8,7 +8,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
 
-public final class JasmineJUnitReporter implements JasmineReporter {
+public final class JasmineJUnitReporter implements JavaScriptReporter {
 
     private final RunNotifier notifier;
     private final Class<?> suiteClass;

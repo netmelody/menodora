@@ -4,9 +4,10 @@ import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.netmelody.menodora.core.Context;
-import org.netmelody.menodora.core.JasmineExecutionEnvironment;
-import org.netmelody.menodora.core.JasmineJUnitReporter;
+import org.netmelody.menodora.core.ExecutionEnvironmentPreparation;
 import org.netmelody.menodora.core.JasmineSuiteDescriber;
+import org.netmelody.menodora.core.JavaScriptEnvironment;
+import org.netmelody.menodora.jasmine.JasmineTestRunner;
 
 public final class JasmineSuite extends Runner {
 
@@ -17,8 +18,7 @@ public final class JasmineSuite extends Runner {
         try {
             context = new Context(suiteClass);
             suiteDescriber = new JasmineSuiteDescriber(context);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
     }
@@ -30,7 +30,8 @@ public final class JasmineSuite extends Runner {
 
     @Override
     public void run(RunNotifier notifier) {
-        final JasmineExecutionEnvironment environment = new JasmineExecutionEnvironment(context.withSimulatedDom());
-        environment.executeJasmineTests(context.javascriptLocator(), new JasmineJUnitReporter(context.getSuiteClass(), notifier));
+        JavaScriptEnvironment environment = new JavaScriptEnvironment();
+        new ExecutionEnvironmentPreparation(context.withSimulatedDom()).prepare(environment);
+        new JasmineTestRunner(context, environment).executeTests(notifier);
     }
 }
