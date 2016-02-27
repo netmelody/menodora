@@ -1,10 +1,6 @@
 # Maven
 target
 
-# Ant
-build
-bin
-
 # Eclipse
 out
 
