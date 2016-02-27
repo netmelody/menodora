@@ -26,10 +26,9 @@ public final class Context {
                                    .setScanners(new ResourcesScanner()));
     }
 
-    public JavaScriptTestRunner constructRunner(JavaScriptEnvironment environment) {
+    public TestStyle testStyle() {
         try {
-            return annotation().runner().getConstructor(Context.class, JavaScriptEnvironment.class)
-                    .newInstance(this, environment);
+            return annotation().style().getConstructor().newInstance();
         } catch (InstantiationException e) {
             throw new IllegalArgumentException(e);
         } catch (IllegalAccessException e) {

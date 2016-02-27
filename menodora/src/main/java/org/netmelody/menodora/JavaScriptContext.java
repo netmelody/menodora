@@ -5,13 +5,13 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import org.netmelody.menodora.core.JavaScriptTestRunner;
+import org.netmelody.menodora.core.TestStyle;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 public @interface JavaScriptContext {
-    Class<? extends JavaScriptTestRunner> runner();
+    Class<? extends TestStyle> style();
 
     String[] source() default "*.js";
 
