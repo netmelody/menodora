@@ -9,14 +9,14 @@ import java.util.Set;
 
 public final class CompositeLocator implements Locator {
 
-    private final List<Locator> locators = new ArrayList<Locator>();
+    private final List<Locator> locators;
 
     public CompositeLocator(Locator... locators) {
-        if (null == locators) {
-            return;
-        }
+        this(Arrays.asList(locators));
+    }
 
-        this.locators.addAll(Arrays.asList(locators));
+    public CompositeLocator(List<Locator> locators) {
+        this.locators = new ArrayList<Locator>(locators);
         Collections.reverse(this.locators);
     }
 

@@ -3,8 +3,7 @@ package org.netmelody.menodora.core;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import org.netmelody.menodora.JasmineJavascriptContext;
+import org.netmelody.menodora.JavaScriptContext;
 import org.netmelody.menodora.core.locator.ClasspathLocator;
 import org.netmelody.menodora.core.locator.CompositeLocator;
 import org.netmelody.menodora.core.locator.Locator;
@@ -15,8 +14,10 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
 public final class Context {
+    @JavaScriptContext
+    private static final class DEFAULT { }
 
-    @JasmineJavascriptContext private static final class DEFAULT { }
+    private static final JavaScriptContext DEFAULT_ANNOTATION = DEFAULT.class.getAnnotation(JavaScriptContext.class);
 
     private final Class<?> suiteClass;
     private final Reflections reflections;
@@ -33,51 +34,31 @@ public final class Context {
         return this.suiteClass;
     }
 
-    private String[] getJasmineSpecFileMatchers() {
-        JasmineJavascriptContext annotation = this.suiteClass.getAnnotation(JasmineJavascriptContext.class);
-        if (annotation == null) {
-            annotation = DEFAULT.class.getAnnotation(JasmineJavascriptContext.class);
-        }
-        return annotation.jasmineSpecs();
-    }
-
-    private String[] getJasmineHelperFileMatchers() {
-        JasmineJavascriptContext annotation = this.suiteClass.getAnnotation(JasmineJavascriptContext.class);
-        if (annotation == null) {
-            annotation = DEFAULT.class.getAnnotation(JasmineJavascriptContext.class);
-        }
-        return annotation.jasmineHelpers();
-    }
-
-    private String[] getSourceFileMatchers() {
-        JasmineJavascriptContext annotation = this.suiteClass.getAnnotation(JasmineJavascriptContext.class);
-        if (annotation == null) {
-            annotation = DEFAULT.class.getAnnotation(JasmineJavascriptContext.class);
-        }
-        return annotation.source();
-    }
-
     public boolean withSimulatedDom() {
-        JasmineJavascriptContext annotation = this.suiteClass.getAnnotation(JasmineJavascriptContext.class);
-        if (annotation == null) {
-            annotation = DEFAULT.class.getAnnotation(JasmineJavascriptContext.class);
-        }
-        return annotation.withSimulatedDom();
+        return annotation().withSimulatedDom();
     }
 
     public Iterable<String> reflectionsExample() {
         return reflections.getResources(Pattern.compile(".*\\.js"));
     }
 
-    public Locator jasmineSpecLocator() {
-        return classpathLocatorFor(getJasmineSpecFileMatchers());
+    public List<String> allJavaScriptResources() {
+        return javascriptLocator().locate();
     }
 
-    public Locator javascriptLocator() {
+    public List<String> allTestResources() {
+        return testsLocator().locate();
+    }
+
+    private Locator javascriptLocator() {
         return new CompositeLocator(
-                classpathLocatorFor(getSourceFileMatchers()),
-                classpathLocatorFor(getJasmineHelperFileMatchers()),
-                jasmineSpecLocator());
+                classpathLocatorFor(annotation().source()),
+                classpathLocatorFor(annotation().helpers()),
+                testsLocator());
+    }
+
+    private Locator testsLocator() {
+        return classpathLocatorFor(annotation().tests());
     }
 
     private Locator classpathLocatorFor(String... patterns) {
@@ -85,6 +66,14 @@ public final class Context {
         for (String pattern : patterns) {
             locators.add(new ClasspathLocator(reflections, Pattern.compile(".*" + pattern.replaceAll("\\*", ".*"))));
         }
-        return new CompositeLocator(locators.toArray(new Locator[locators.size()]));
+        return new CompositeLocator(locators);
+    }
+
+    private JavaScriptContext annotation() {
+        JavaScriptContext annotation = suiteClass.getAnnotation(JavaScriptContext.class);
+        if (annotation == null) {
+            return DEFAULT_ANNOTATION;
+        }
+        return annotation;
     }
 }

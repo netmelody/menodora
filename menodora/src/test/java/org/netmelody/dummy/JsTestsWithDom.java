@@ -1,14 +1,14 @@
 package org.netmelody.dummy;
 
 import org.junit.runner.RunWith;
-import org.netmelody.menodora.JasmineJavascriptContext;
+import org.netmelody.menodora.JavaScriptContext;
 import org.netmelody.menodora.JasmineSuite;
 
 @RunWith(JasmineSuite.class)
-@JasmineJavascriptContext(
+@JavaScriptContext(
         source="org/netmelody/dummy/main/*.js",
-        jasmineHelpers="org/netmelody/dummy/test/*.js",
-        jasmineSpecs="org/netmelody/dummy/test/*Spec.js",
+        helpers ="org/netmelody/dummy/test/*.js",
+        tests ="org/netmelody/dummy/test/*Spec.js",
         withSimulatedDom=true)
 public class JsTestsWithDom {
 

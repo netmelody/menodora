@@ -19,7 +19,7 @@ public class JasmineTestRunner implements TestRunner {
     }
 
     public void executeTests(RunNotifier notifier) {
-        for (String resource : context.javascriptLocator().locate()) {
+        for (String resource : context.allJavaScriptResources()) {
             environment.loadResource(resource);
         }
 
@@ -42,4 +42,5 @@ public class JasmineTestRunner implements TestRunner {
             throw new IllegalStateException(e);
         }
     }
+
 }

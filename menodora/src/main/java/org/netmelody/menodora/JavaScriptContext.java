@@ -9,12 +9,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
-public @interface JasmineJavascriptContext {
+public @interface JavaScriptContext {
     String[] source() default "*.js";
 
-    String[] jasmineHelpers() default "";
+    String[] helpers() default "";
 
-    String[] jasmineSpecs() default "*Spec.js";
+    String[] tests() default "*Spec.js";
 
     boolean withSimulatedDom() default false;
 }

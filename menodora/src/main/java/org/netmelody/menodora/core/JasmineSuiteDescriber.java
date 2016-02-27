@@ -15,11 +15,12 @@ public final class JasmineSuiteDescriber {
     public Description getDescription() {
         final Description description = Description.createSuiteDescription(context.getSuiteClass());
 
-        final List<String> specs = context.jasmineSpecLocator().locate();
-        for (String spec : specs) {
-            description.addChild(new JasmineSpecFileDescriber(spec, context.getSuiteClass()).getDescription());
+        final List<String> testResources = context.allTestResources();
+        for (String testResource : testResources) {
+            description.addChild(new JasmineSpecFileDescriber(testResource, context.getSuiteClass()).getDescription());
         }
 
         return description;
     }
+
 }
