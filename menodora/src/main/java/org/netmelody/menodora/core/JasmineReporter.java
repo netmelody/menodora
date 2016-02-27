@@ -13,5 +13,4 @@ public interface JasmineReporter {
     void reportSpecStarting(NativeObject spec);
 
     void reportSuiteResults(NativeObject suite);
-
 }

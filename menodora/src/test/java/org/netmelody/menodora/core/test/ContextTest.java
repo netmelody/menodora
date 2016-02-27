@@ -2,14 +2,11 @@ package org.netmelody.menodora.core.test;
 
 import java.net.URL;
 import java.net.URLClassLoader;
-
 import org.junit.Test;
 import org.netmelody.menodora.core.Context;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 
 public final class ContextTest {
     @Test public void
@@ -25,7 +22,7 @@ public final class ContextTest {
                 "dummyjstests/PlayerSpec.js"));
     }
 
-    private static ClassLoader createClassLoader() throws Exception {
+    private static ClassLoader createClassLoader() {
         return new URLClassLoader(new URL[] {
                 ContextTest.class.getResource("/dummyproj2.jar")
         });

@@ -64,19 +64,19 @@ public final class JasmineExecutionEnvironment {
         }
     }
 
-    private Object loadJavaScript(String resource) {
+    private void loadJavaScript(String resource) {
         try {
             URL url = getClass().getResource(resource);
             String scriptSource = IOUtils.toString(url.openStream());
             String path = url.toExternalForm();
-            return context.compileString(scriptSource, path, 1, null).exec(context, global);
+            context.compileString(scriptSource, path, 1, null).exec(context, global);
         }
         catch (IOException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    private Object eval(String script) {
-        return context.compileString(script, "local.js", 1, null).exec(context, global);
+    private void eval(String script) {
+        context.compileString(script, "local.js", 1, null).exec(context, global);
     }
 }
