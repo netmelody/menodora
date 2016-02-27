@@ -1,13 +1,12 @@
-package org.netmelody.menodora.core.test;
+package org.netmelody.menodora.jasmine;
 
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.netmelody.dummy.JsTests;
-import org.netmelody.menodora.core.JasmineSpecFileDescriber;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.netmelody.menodora.core.test.DescriptionMatcher.aDescription;
+import static org.netmelody.menodora.test.DescriptionMatcher.aDescription;
 
 public class JasmineSpecFileDescriberTest {
 

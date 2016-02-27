@@ -1,12 +1,12 @@
-package org.netmelody.menodora.core;
+package org.netmelody.menodora.jasmine;
 
 import junit.framework.AssertionFailedError;
-
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
+import org.netmelody.menodora.core.JavaScriptReporter;
 
 public final class JasmineJUnitReporter implements JavaScriptReporter {
 

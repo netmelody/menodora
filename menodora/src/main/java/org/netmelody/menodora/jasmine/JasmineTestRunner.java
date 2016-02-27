@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.junit.runner.notification.RunNotifier;
 import org.netmelody.menodora.core.Context;
-import org.netmelody.menodora.core.JasmineJUnitReporter;
 import org.netmelody.menodora.core.JavaScriptEnvironment;
 import org.netmelody.menodora.core.JavaScriptTestRunner;
 

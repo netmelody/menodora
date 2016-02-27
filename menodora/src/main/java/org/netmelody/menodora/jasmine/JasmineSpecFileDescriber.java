@@ -1,4 +1,4 @@
-package org.netmelody.menodora.core;
+package org.netmelody.menodora.jasmine;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

@@ -1,7 +1,8 @@
-package org.netmelody.menodora.core;
+package org.netmelody.menodora.jasmine;
 
 import org.junit.runner.Describable;
 import org.junit.runner.Description;
+import org.netmelody.menodora.core.Context;
 
 public final class JasmineSuiteDescriber implements Describable {
 

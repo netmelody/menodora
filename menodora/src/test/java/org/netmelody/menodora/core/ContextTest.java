@@ -1,9 +1,8 @@
-package org.netmelody.menodora.core.test;
+package org.netmelody.menodora.core;
 
 import java.net.URL;
 import java.net.URLClassLoader;
 import org.junit.Test;
-import org.netmelody.menodora.core.Context;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
