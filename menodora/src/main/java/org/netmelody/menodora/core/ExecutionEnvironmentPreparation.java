@@ -21,7 +21,6 @@ public final class ExecutionEnvironmentPreparation {
         final Timer timer = new Timer();
         environment.setGlobal("__timer__", timer);
         environment.loadResource("menodora-js/fake.scheduler.js");
-        prepareCommon(environment);
     }
 
     private void prepareWithSimulatedDom(JavaScriptEnvironment environment) {
@@ -29,10 +28,5 @@ public final class ExecutionEnvironmentPreparation {
         environment.eval("Packages." + Context.class.getName() + ".getCurrentContext().setOptimizationLevel(-1);");
         environment.loadResource("env.js-1.2/env.rhino.1.2.js");
         environment.eval("Envjs.scriptTypes['text/javascript'] = true;");
-        prepareCommon(environment);
-    }
-
-    private void prepareCommon(JavaScriptEnvironment environment) {
-        environment.loadResource("jasmine-1.0.2/jasmine.js");
     }
 }

@@ -19,6 +19,7 @@ public class JasmineTestRunner implements JavaScriptTestRunner {
 
     @Override
     public void executeTests(RunNotifier notifier) {
+        environment.loadResource("jasmine-1.0.2/jasmine.js");
         for (String resource : context.allJavaScriptResources()) {
             environment.loadResource(resource);
         }
