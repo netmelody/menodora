@@ -2,7 +2,8 @@ package org.netmelody.menodora.jasmine;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import org.junit.runner.Describable;
 import org.junit.runner.Description;
 import org.mozilla.javascript.CompilerEnvirons;
@@ -47,55 +48,59 @@ public final class JasmineSpecFileDescriber implements Describable {
 
     private static class SpecNodeVisitor implements NodeVisitor {
         private static class NodeDesc {
-            int depth;
-            Description description;
+            public final int depth;
+            public final Description description;
 
-            public static NodeDesc of(int nodeDepth, Description nodeDescription) {
-                final NodeDesc result = new NodeDesc();
-                result.depth = nodeDepth;
-                result.description = nodeDescription;
-                return result;
+            public NodeDesc(int depth, Description description) {
+                this.depth = depth;
+                this.description = description;
             }
         }
 
         private final Class<?> suiteClass;
-        private final Stack<NodeDesc> stack = new Stack<NodeDesc>();
+        private final Deque<NodeDesc> nodeStack = new ArrayDeque<NodeDesc>();
 
         public SpecNodeVisitor(Class<?> suiteClass, Description rootDescription) {
             this.suiteClass = suiteClass;
-            stack.push(NodeDesc.of(0, rootDescription));
+            this.nodeStack.push(new NodeDesc(0, rootDescription));
         }
 
         @Override
         public boolean visit(AstNode node) {
-            if (node.getType() != Token.NAME) {
+            if (node.getType() != Token.NAME || node.getParent().getType() != Token.CALL) {
                 return true;
             }
 
-            if ("describe".equals(node.getString())) {
-                final String desc = ((StringLiteral)((FunctionCall)node.getParent()).getArguments().get(0)).getValue();
-                Description suiteDesc = Description.createSuiteDescription(desc);
+            String nodeValue = node.getString();
+            if ("describe".equals(nodeValue)) {
+                String description = firstStringArgumentOf(node);
+                Description suiteDescription = Description.createSuiteDescription(description);
 
-                while (stack.peek().depth >= node.depth()) {
-                    stack.pop();
-                }
-                stack.peek().description.addChild(suiteDesc);
-                stack.push(NodeDesc.of(node.depth(), suiteDesc));
+                revertStackTo(node.depth());
+                nodeStack.peek().description.addChild(suiteDescription);
+                nodeStack.push(new NodeDesc(node.depth(), suiteDescription));
                 return true;
-            }
+            } else if ("it".equals(nodeValue)) {
+                String description = firstStringArgumentOf(node);
+                Description testDescription = Description.createTestDescription(suiteClass, description);
 
-            if ("it".equals(node.getString())) {
-                final String desc = ((StringLiteral)((FunctionCall)node.getParent()).getArguments().get(0)).getValue();
-                Description testDescription = Description.createTestDescription(this.suiteClass, desc);
-
-                while (stack.peek().depth >= node.depth()) {
-                    stack.pop();
-                }
-                stack.peek().description.addChild(testDescription);
+                revertStackTo(node.depth());
+                nodeStack.peek().description.addChild(testDescription);
                 return false;
             }
 
             return true;
         }
+
+        public static String firstStringArgumentOf(AstNode node) {
+            return ((StringLiteral) ((FunctionCall) node.getParent()).getArguments().get(0)).getValue();
+        }
+
+        public void revertStackTo(int nodeDepth) {
+            while (nodeStack.peek().depth >= nodeDepth) {
+                nodeStack.pop();
+            }
+        }
+
     }
 }

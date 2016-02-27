@@ -44,6 +44,7 @@ public class DescriptionMatcher extends TypeSafeDiagnosingMatcher<Description> {
 
     @Override
     protected boolean matchesSafely(Description actual, org.hamcrest.Description mismatchDescription) {
+        mismatchDescription.appendText("was ");
         describeValue(actual, mismatchDescription);
         List<Description> actualChildren = actual.getChildren();
         return expectedDisplayName().equals(actual.getDisplayName())
