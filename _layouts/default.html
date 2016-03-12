@@ -31,27 +31,7 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h1>Menodora</h1>
-
-<p>Menodora is a JUnit test runner for Jasmine JavaScript tests, which you can <a href="https://github.com/netmelody/panto/downloads">download</a> and use.</p>
-
-<h4>Usage</h4>
-
-<p>Start by creating a new Java class in your test directory and applying the Menodora annotations:</p>
-
-<div class="highlight">
-<pre><span class="nd">@RunWith</span><span class="o">(</span><span class="n">JasmineSuite</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-<span class="nd">@JasmineJavascriptContext</span><span class="o">(</span>
-        <span class="n">source</span><span class="o">=</span><span class="s">"source/main/js/*.js"</span><span class="o">,</span>
-        <span class="n">jasmineHelpers</span><span class="o">=</span><span class="s">"src/test/js/*Helper.js"</span><span class="o">,</span>
-        <span class="n">jasmineSpecs</span><span class="o">=</span><span class="s">"src/test/js/*Spec.js"</span><span class="o">,</span>
-        <span class="n">withSimulatedDom</span><span class="o">=</span><span class="kc">false</span><span class="o">)</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">JsTests</span> <span class="o">{</span> <span class="o">}</span>
-</pre>
-</div>
-
-
-<p>Now you can run this class like you would any other JUnit test.</p>
+        {{content}}
       </section>
     </div>
 
@@ -61,8 +41,5 @@
         <p class="copyright">Maintained by <a href="https://github.com/netmelody">netmelody</a></p>
       </footer>
     </div>
-
-    
-
   </body>
 </html>
